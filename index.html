@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CNC Plasma Cutting — Student Curriculum | Mr. McAteer</title>
+<title>CNC Plasma Cutting — Complete Student Guide | Mr. McAteer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
-
   :root {
     --fire: #E8600A;
     --fire-glow: #FF8C38;
@@ -23,10 +23,11 @@
     --blue-bg: #E3F0FC;
     --yellow: #F5A623;
     --yellow-bg: #FFF8E7;
+    --yellow-border: #E6C200;
     --border: #D0D0D8;
     --bg: #F0F0F4;
     --white: #FFFFFF;
-    --radius: 10px;
+    --radius: 8px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,664 +36,966 @@
     font-family: 'Source Sans 3', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--dark);
-    line-height: 1.5;
+    line-height: 1.55;
+    font-size: 16px;
   }
 
   /* ── HERO ── */
   .hero {
     background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark) 60%, #1a1020 100%);
     color: var(--white);
-    padding: 3rem 2rem 2.5rem;
+    padding: 3rem 2rem 2rem;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
-
   .hero::before {
     content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(ellipse at 30% 80%, rgba(232,96,10,0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 20%, rgba(21,101,192,0.1) 0%, transparent 50%);
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 80%, rgba(232,96,10,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 20%, rgba(21,101,192,0.08) 0%, transparent 50%);
     pointer-events: none;
   }
-
   .hero-content { position: relative; max-width: 800px; margin: 0 auto; }
-
   .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(232,96,10,0.15);
-    border: 1px solid rgba(232,96,10,0.3);
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--fire-glow);
-    margin-bottom: 1rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,96,10,0.15); border: 1px solid rgba(232,96,10,0.3);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 600; color: var(--fire-glow);
+    letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 1rem;
   }
-
   .hero h1 {
     font-family: 'Oswald', sans-serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; line-height: 1.1; margin-bottom: 0.75rem;
   }
-
   .hero h1 span { color: var(--fire); }
-
-  .hero p {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.7);
-    max-width: 600px;
-    margin: 0 auto 1.5rem;
-  }
-
-  .hero-meta {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
-    flex-wrap: wrap;
-  }
-
+  .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 1.5rem; }
+  .hero-meta { display: flex; justify-content: center; gap: 2rem; font-size: 0.85rem; color: rgba(255,255,255,0.5); flex-wrap: wrap; }
   .hero-meta strong { color: rgba(255,255,255,0.8); }
 
-  /* ── NAV PIPELINE ── */
-  .nav-pipeline {
+  /* ── STICKY NAV ── */
+  .nav-bar {
     background: var(--white);
     border-bottom: 2px solid var(--border);
-    padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    padding: 0.75rem 1.5rem;
+    position: sticky; top: 0; z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-
   .nav-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    max-width: 1000px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
-
   .nav-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    color: var(--steel);
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: all 0.2s;
-    flex-shrink: 0;
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 6px;
+    text-decoration: none; color: var(--steel);
+    font-size: 0.82rem; font-weight: 600; white-space: nowrap;
+    transition: all 0.2s; flex-shrink: 0;
   }
-
-  .nav-step:hover {
-    background: var(--fire-bg);
-    color: var(--fire);
-  }
-
+  .nav-step:hover { background: var(--fire-bg); color: var(--fire); }
   .nav-num {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-    color: var(--white);
-    flex-shrink: 0;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 0.7rem; color: var(--white); flex-shrink: 0;
   }
-
-  .nav-arrow {
-    color: var(--border);
-    font-size: 1.2rem;
-    flex-shrink: 0;
-    padding: 0 4px;
-  }
+  .nav-arrow { color: var(--border); font-size: 1rem; flex-shrink: 0; padding: 0 2px; }
 
   /* ── CONTAINER ── */
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
+  .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
 
   /* ── SECTION HEADERS ── */
   .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 3rem 0 1.5rem;
-    padding-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+    margin: 3rem 0 1.25rem; padding-bottom: 10px;
     border-bottom: 3px solid var(--fire);
   }
-
   .section-header:first-child { margin-top: 0; }
-
   .section-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    flex-shrink: 0;
-    color: var(--white);
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 700; flex-shrink: 0;
+    color: var(--white); font-family: 'Oswald', sans-serif;
   }
-
   .section-header h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--dark);
+    font-family: 'Oswald', sans-serif; font-size: 1.4rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
   }
-
   .section-header h2 small {
-    display: block;
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--steel);
-    margin-top: 2px;
+    display: block; font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.85rem; font-weight: 400; text-transform: none;
+    letter-spacing: 0; color: var(--steel); margin-top: 2px;
   }
-
   .section-tag {
-    margin-left: auto;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--steel);
-    white-space: nowrap;
+    margin-left: auto; background: var(--bg); border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    font-weight: 500; color: var(--steel); white-space: nowrap;
   }
 
-  /* ── CARD GRID ── */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.25rem;
-  }
-
+  /* ── CONTENT CARDS ── */
   .card {
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    transition: all 0.2s;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 1.25rem;
+    margin-bottom: 1rem;
   }
-
-  a.card:hover {
-    border-color: var(--fire);
-    box-shadow: 0 4px 20px rgba(232,96,10,0.12);
-    transform: translateY(-2px);
-  }
-
-  .card-type {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 0.75rem;
-    width: fit-content;
-  }
-
-  .card-type.guide { background: var(--blue-bg); color: var(--blue); }
-  .card-type.reference { background: var(--green-bg); color: var(--green); }
-  .card-type.tool { background: var(--fire-bg); color: var(--fire); }
-  .card-type.safety { background: var(--red-bg); color: var(--red); }
-  .card-type.video { background: #F3E8FF; color: #7C3AED; }
+  .card-accent { border-left: 4px solid var(--fire); }
+  .card-red { border-left: 4px solid var(--red); background: var(--red-bg); }
+  .card-green { border-left: 4px solid var(--green); background: var(--green-bg); }
+  .card-blue { border-left: 4px solid var(--blue); background: var(--blue-bg); }
+  .card-yellow { border-left: 4px solid var(--yellow-border); background: var(--yellow-bg); }
 
   .card h3 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
+    font-family: 'Oswald', sans-serif; font-size: 1.1rem;
+    font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;
+    letter-spacing: 0.3px;
   }
 
-  .card p {
-    font-size: 0.9rem;
-    color: var(--steel);
-    flex: 1;
+  /* ── TWO COLUMN ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* ── PIPELINE ── */
+  .pipeline {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; margin: 1.5rem 0; padding: 1rem;
+    background: var(--white); border-radius: var(--radius);
+    border: 1.5px solid var(--border); overflow-x: auto;
+  }
+  .pipe-step {
+    text-align: center; padding: 0.6rem 0.8rem;
+    flex-shrink: 0; min-width: 100px;
+  }
+  .pipe-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 0.8rem; color: var(--white); margin-bottom: 4px;
+  }
+  .pipe-title {
+    font-family: 'Oswald', sans-serif; font-size: 0.85rem;
+    font-weight: 700; text-transform: uppercase; color: var(--dark);
+  }
+  .pipe-detail {
+    font-size: 0.75rem; color: var(--steel); margin-top: 2px;
+  }
+  .pipe-detail code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    background: var(--fire-bg); color: var(--fire);
+    padding: 1px 4px; border-radius: 3px;
+  }
+  .pipe-arrow { color: var(--border); font-size: 1.2rem; flex-shrink: 0; padding: 0 4px; font-weight: 700; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.9rem; }
+  th {
+    background: var(--charcoal); color: var(--white);
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 8px 10px; text-align: left;
+  }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #FAFAFC; }
+  td code, .code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+    background: var(--fire-bg); color: var(--fire);
+    padding: 1px 5px; border-radius: 3px;
   }
 
-  .card-footer {
-    margin-top: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--mid);
+  /* ── NUMBERED STEPS ── */
+  .steps { counter-reset: step-counter; }
+  .step {
+    display: flex; gap: 10px; padding: 0.6rem 0;
+    border-bottom: 1px solid #EEEEF2; font-size: 0.92rem;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    counter-increment: step-counter; flex-shrink: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--charcoal); color: var(--white);
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .step-num::before { content: counter(step-counter); }
+  .step-body { flex: 1; }
+  .step-body strong { color: var(--dark); }
+  .step-body em { color: var(--fire); }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 6px 0 6px 28px; position: relative;
+    border-bottom: 1px dashed #E0E0E8; font-size: 0.92rem;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: ''; position: absolute; left: 0; top: 8px;
+    width: 16px; height: 16px; border: 2px solid var(--steel);
+    border-radius: 3px; background: var(--white);
   }
 
-  .card-footer .format {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    background: var(--bg);
-    padding: 2px 8px;
-    border-radius: 3px;
+  /* ── CALLOUTS ── */
+  .callout {
+    border-radius: var(--radius); padding: 0.75rem 1rem;
+    margin: 0.75rem 0; font-size: 0.9rem;
+    display: flex; gap: 8px; align-items: flex-start;
   }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+  .callout-red { background: var(--red-bg); border-left: 4px solid var(--red); }
+  .callout-green { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .callout-blue { background: var(--blue-bg); border-left: 4px solid var(--blue); }
+  .callout-yellow { background: var(--yellow-bg); border-left: 4px solid var(--yellow-border); }
+  .callout-fire { background: var(--fire-bg); border-left: 4px solid var(--fire); }
 
-  .card-arrow {
-    color: var(--fire);
-    font-size: 1.2rem;
-    font-weight: 700;
-    opacity: 0;
-    transition: opacity 0.2s;
+  /* ── PHOTO CARDS ── */
+  .photo-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin: 1rem 0;
   }
-
-  a.card:hover .card-arrow { opacity: 1; }
-
-  /* ── LEARNING PATH CONNECTOR ── */
-  .learning-note {
-    background: var(--yellow-bg);
-    border: 1.5px solid #E6C200;
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    margin: 1.5rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 0.9rem;
+  .photo-card img {
+    width: 100%; height: auto; display: block;
+    border-bottom: 1.5px solid var(--border);
   }
-
-  .learning-note .icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-    margin-top: 2px;
+  .photo-card .caption {
+    padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--steel);
   }
+  .photo-card .caption strong { color: var(--dark); }
 
-  .learning-note strong { color: var(--dark); }
+  /* ── HERO IMAGE ── */
+  .hero-image {
+    max-width: 400px; margin: 1.5rem auto;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border: 3px solid rgba(255,255,255,0.1);
+  }
+  .hero-image img { width: 100%; height: auto; display: block; }
 
-  /* ── EQUIPMENT SPECS ── */
+  /* ── SPECS BAR ── */
   .specs-bar {
-    background: var(--charcoal);
-    color: var(--white);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 2rem 0;
+    background: var(--charcoal); color: var(--white);
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+    display: flex; justify-content: space-around; flex-wrap: wrap; gap: 0.75rem;
+    margin: 1.5rem 0;
   }
-
-  .spec-item {
-    text-align: center;
-  }
-
+  .specs-bar.light { background: var(--white); border: 1.5px solid var(--border); }
+  .spec-item { text-align: center; }
   .spec-item .value {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--fire);
+    font-family: 'Oswald', sans-serif; font-size: 1.1rem;
+    font-weight: 700; color: var(--fire);
   }
-
+  .specs-bar.light .spec-item .value { color: var(--dark); }
   .spec-item .label {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.7rem; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
+  .specs-bar.light .spec-item .label { color: var(--steel); }
+
+  /* ── ISLAND DIAGRAM ── */
+  .island-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
+  .island-box { border-radius: var(--radius); padding: 1rem; text-align: center; }
+  .island-bad { background: var(--red-bg); border: 2px solid #E8A0A0; }
+  .island-good { background: var(--green-bg); border: 2px solid #A0D8B0; }
+  .island-box h4 { font-family: 'Oswald', sans-serif; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 4px; }
+  .island-bad h4 { color: var(--red); }
+  .island-good h4 { color: var(--green); }
+  .island-letters { font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: 4px; margin: 4px 0; }
+  .island-bad .island-letters { color: var(--red); }
+  .island-good .island-letters { color: var(--green); }
+  .island-box p { font-size: 0.85rem; }
+
+  /* ── COMPARE BOXES ── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
+  .compare-box { border-radius: var(--radius); padding: 1rem; }
+  .compare-box.dxf { background: var(--blue-bg); border: 1.5px solid #B3D4F7; }
+  .compare-box.svg { background: var(--green-bg); border: 1.5px solid #B3DFC4; }
+  .compare-box h4 {
+    font-family: 'Oswald', sans-serif; font-size: 1rem;
+    font-weight: 700; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .compare-box.dxf h4 { color: var(--blue); }
+  .compare-box.svg h4 { color: var(--green); }
+  .compare-box ul { list-style: none; padding: 0; font-size: 0.88rem; }
+  .compare-box li { padding: 2px 0 2px 14px; position: relative; }
+  .compare-box li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; }
+  .compare-box.dxf li::before { background: var(--blue); }
+  .compare-box.svg li::before { background: var(--green); }
+
+  /* ── CONSUMABLE GRID ── */
+  .consumable-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin: 0.75rem 0; }
+  .consumable-card {
+    text-align: center; padding: 0.75rem 0.5rem;
+    border-radius: var(--radius); background: var(--white);
+    border: 1.5px solid var(--border);
+  }
+  .consumable-card.wear { border-color: var(--red); background: var(--red-bg); }
+  .consumable-card .part-icon { font-size: 1.5rem; margin-bottom: 4px; }
+  .consumable-card .part-name { font-weight: 700; font-size: 0.82rem; color: var(--dark); margin-bottom: 2px; }
+  .consumable-card .part-detail { font-size: 0.72rem; color: var(--steel); line-height: 1.3; }
 
   /* ── FOOTER ── */
   .site-footer {
-    background: var(--charcoal);
-    color: rgba(255,255,255,0.5);
-    padding: 2rem;
-    text-align: center;
-    font-size: 0.85rem;
-    margin-top: 3rem;
+    background: var(--charcoal); color: rgba(255,255,255,0.5);
+    padding: 2rem; text-align: center; font-size: 0.85rem; margin-top: 3rem;
   }
-
   .site-footer strong { color: rgba(255,255,255,0.8); }
-
-  .site-footer a {
-    color: var(--fire-glow);
-    text-decoration: none;
-  }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .hero { padding: 2rem 1rem 1.5rem; }
+    .hero { padding: 2rem 1rem; }
     .container { padding: 1rem; }
-    .hero-meta { gap: 1rem; }
+    .two-col, .compare-grid, .island-grid { grid-template-columns: 1fr; }
+    .consumable-grid { grid-template-columns: 1fr 1fr; }
+    .specs-bar { flex-direction: column; align-items: center; }
     .section-header { flex-wrap: wrap; }
     .section-tag { margin-left: 0; }
-    .card-grid { grid-template-columns: 1fr; }
-    .specs-bar { flex-direction: column; align-items: center; }
+    .hero-image { max-width: 280px; }
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .nav-bar { display: none; }
+    .hero { padding: 1rem; }
+    body { font-size: 10pt; background: white; }
+    .container { padding: 0.5rem; }
+    .card, .photo-card { break-inside: avoid; }
+    .section-header { break-after: avoid; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════ HERO ═══════ -->
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HERO                                           -->
+<!-- ═══════════════════════════════════════════════ -->
 <div class="hero">
   <div class="hero-content">
-    <div class="hero-badge">CTE Metals &amp; Fabrication</div>
-    <h1>CNC <span>Plasma</span> Cutting<br>Student Curriculum</h1>
-    <p>Everything you need to go from design idea to finished cut part on our Arclight CNC plasma table. Follow the learning path below.</p>
+    <div class="hero-badge">CTE Metals &amp; Fabrication &middot; Crescent Valley HS</div>
+    <h1>CNC <span>Plasma</span> Cutting<br>Complete Student Guide</h1>
+    <p>From concept to finished cut part on our Arclight CNC plasma table. Follow the sections below &mdash; each builds on the last.</p>
+    <div class="hero-image">
+      <img src="assets/photos/finished-example.png" alt="Finished CNC plasma cut sign in steel">
+    </div>
     <div class="hero-meta">
-      <span><strong>Mr. McAteer</strong> &middot; Crescent Valley HS</span>
+      <span><strong>Mr. McAteer</strong></span>
       <span>Arclight Arc Pro &middot; Hypertherm Powermax45</span>
-      <span>Rev. February 2026</span>
+      <span>SheetCam 6.1.38 &middot; CommandCNC 2.7.8</span>
     </div>
   </div>
 </div>
 
-<!-- ═══════ STICKY NAV ═══════ -->
-<nav class="nav-pipeline">
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STICKY NAV                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<nav class="nav-bar">
   <div class="nav-inner">
-    <a href="#understand" class="nav-step">
-      <div class="nav-num" style="background:var(--blue);">1</div>
-      Understand
-    </a>
+    <a href="#understand" class="nav-step"><div class="nav-num" style="background:var(--blue);">1</div>Understand</a>
     <span class="nav-arrow">&rarr;</span>
-    <a href="#design" class="nav-step">
-      <div class="nav-num" style="background:var(--charcoal);">2</div>
-      Design
-    </a>
+    <a href="#design" class="nav-step"><div class="nav-num" style="background:var(--charcoal);">2</div>Design</a>
     <span class="nav-arrow">&rarr;</span>
-    <a href="#prepare" class="nav-step">
-      <div class="nav-num" style="background:var(--fire);">3</div>
-      Prepare
-    </a>
+    <a href="#export" class="nav-step"><div class="nav-num" style="background:var(--charcoal);">3</div>Export</a>
     <span class="nav-arrow">&rarr;</span>
-    <a href="#cut" class="nav-step">
-      <div class="nav-num" style="background:var(--red);">4</div>
-      Cut
-    </a>
+    <a href="#sheetcam" class="nav-step"><div class="nav-num" style="background:var(--fire);">4</div>SheetCam</a>
     <span class="nav-arrow">&rarr;</span>
-    <a href="#tools" class="nav-step">
-      <div class="nav-num" style="background:var(--green);">T</div>
-      Tools
-    </a>
+    <a href="#cut" class="nav-step"><div class="nav-num" style="background:var(--red);">5</div>Cut</a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#troubleshoot" class="nav-step"><div class="nav-num" style="background:#7c3aed;">T</div>Fix</a>
   </div>
 </nav>
 
 <div class="container">
 
-  <!-- ═══════ EQUIPMENT SPECS BAR ═══════ -->
+  <!-- ═══════ EQUIPMENT SPECS ═══════ -->
   <div class="specs-bar">
-    <div class="spec-item">
-      <div class="value">Arclight Arc Pro</div>
-      <div class="label">CNC Table</div>
+    <div class="spec-item"><div class="value">Arclight Arc Pro</div><div class="label">CNC Table</div></div>
+    <div class="spec-item"><div class="value">Powermax 45</div><div class="label">Plasma Source</div></div>
+    <div class="spec-item"><div class="value">45A Shielded</div><div class="label">Consumables</div></div>
+    <div class="spec-item"><div class="value">SheetCam 6.1.38</div><div class="label">CAM Software</div></div>
+    <div class="spec-item"><div class="value">CommandCNC 2.7.8</div><div class="label">Controller</div></div>
+  </div>
+
+  <!-- THE PIPELINE OVERVIEW -->
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-num" style="background:var(--blue);">1</div>
+      <div class="pipe-title">Concept</div>
+      <div class="pipe-detail">Idea or AI image</div>
     </div>
-    <div class="spec-item">
-      <div class="value">Powermax 45</div>
-      <div class="label">Plasma Source</div>
+    <span class="pipe-arrow">&rarr;</span>
+    <div class="pipe-step">
+      <div class="pipe-num" style="background:var(--charcoal);">2</div>
+      <div class="pipe-title">Design</div>
+      <div class="pipe-detail">SolidWorks &middot; Illustrator<br><code>.sldprt</code> <code>.ai</code></div>
     </div>
-    <div class="spec-item">
-      <div class="value">45A Shielded</div>
-      <div class="label">Consumables</div>
+    <span class="pipe-arrow">&rarr;</span>
+    <div class="pipe-step">
+      <div class="pipe-num" style="background:var(--charcoal);">3</div>
+      <div class="pipe-title">Export</div>
+      <div class="pipe-detail">Save As DXF or SVG<br><code>.dxf</code> <code>.svg</code></div>
     </div>
-    <div class="spec-item">
-      <div class="value">SheetCam 6.1.38</div>
-      <div class="label">CAM Software</div>
+    <span class="pipe-arrow">&rarr;</span>
+    <div class="pipe-step">
+      <div class="pipe-num" style="background:var(--fire);">4</div>
+      <div class="pipe-title">CAM</div>
+      <div class="pipe-detail">SheetCam<br>Toolpaths &rarr; <code>.tap</code></div>
     </div>
-    <div class="spec-item">
-      <div class="value">CommandCNC 2.7.8</div>
-      <div class="label">Controller</div>
+    <span class="pipe-arrow">&rarr;</span>
+    <div class="pipe-step" style="background:var(--fire-bg); border-radius:var(--radius);">
+      <div class="pipe-num" style="background:var(--red);">5</div>
+      <div class="pipe-title">Cut</div>
+      <div class="pipe-detail">CommandCNC<br>Load &rarr; Run</div>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- PHASE 1: UNDERSTAND                         -->
+  <!-- SECTION 1: UNDERSTAND                       -->
   <!-- ════════════════════════════════════════════ -->
   <div id="understand">
     <div class="section-header">
       <div class="section-icon" style="background:var(--blue);">1</div>
-      <h2>Understand the Machine
-        <small>Learn what a CNC plasma cutter is, how it works, and why each step matters before you touch anything.</small>
+      <h2>Understand: How CNC Plasma Cutting Works
+        <small>The science, the machine, and the software pipeline.</small>
       </h2>
       <span class="section-tag">Start Here</span>
     </div>
 
-    <div class="learning-note">
-      <span class="icon">&#128218;</span>
-      <div><strong>Learning objective:</strong> After completing this section, you should be able to explain how plasma cuts metal, identify the four major subsystems of our machine, and describe the CAD &rarr; CAM &rarr; CNC software pipeline.</div>
+    <div class="card">
+      <h3>What Is Plasma?</h3>
+      <p>Matter exists in <strong>four states</strong>. Add enough energy and matter transforms from one state to the next. Plasma is the <em>fourth state</em> &mdash; gas so hot it becomes electrically conductive.</p>
+      <div style="display:flex; justify-content:center; gap:0; margin:1rem 0; flex-wrap:wrap; text-align:center;">
+        <div style="padding:0.5rem 1rem; background:var(--blue-bg); border-radius:6px 0 0 6px; min-width:100px;">
+          <div style="font-size:1.5rem;">&#129482;</div><strong style="font-size:0.85rem;">Solid</strong><br><span style="font-size:0.75rem; color:var(--steel);">Ice</span>
+        </div>
+        <div style="padding:0.5rem 0.4rem; color:var(--steel); display:flex; align-items:center;">&rarr;</div>
+        <div style="padding:0.5rem 1rem; background:var(--blue-bg); min-width:100px;">
+          <div style="font-size:1.5rem;">&#128167;</div><strong style="font-size:0.85rem;">Liquid</strong><br><span style="font-size:0.75rem; color:var(--steel);">Water</span>
+        </div>
+        <div style="padding:0.5rem 0.4rem; color:var(--steel); display:flex; align-items:center;">&rarr;</div>
+        <div style="padding:0.5rem 1rem; background:#F5F5F9; min-width:100px;">
+          <div style="font-size:1.5rem;">&#9832;&#65039;</div><strong style="font-size:0.85rem;">Gas</strong><br><span style="font-size:0.75rem; color:var(--steel);">Steam</span>
+        </div>
+        <div style="padding:0.5rem 0.4rem; color:var(--steel); display:flex; align-items:center;">&rarr;</div>
+        <div style="padding:0.5rem 1rem; background:var(--fire-bg); border:2px solid var(--fire); border-radius:0 6px 6px 0; min-width:100px;">
+          <div style="font-size:1.5rem;">&#9889;</div><strong style="font-size:0.85rem; color:var(--fire);">Plasma</strong><br><span style="font-size:0.75rem; color:var(--fire);">40,000&deg;F</span>
+        </div>
+      </div>
     </div>
 
-    <div class="card-grid">
-      <a href="guides/how-cnc-plasma-works.html" class="card">
-        <span class="card-type reference">Reference</span>
-        <h3>How a CNC Plasma Cutter Works</h3>
-        <p>The science behind plasma cutting, the four states of matter, machine anatomy, the software pipeline (CAD &rarr; CAM &rarr; CNC), torch height control, cut quality parameters, and safety fundamentals.</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; 1 page</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
-        </div>
-      </a>
+    <div class="card">
+      <h3>How the Cut Happens</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Compressed air</strong> is forced through a tiny nozzle orifice in the torch.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">A <strong>pilot arc</strong> sparks between the electrode (negative) and the nozzle (positive) inside the torch, ionizing the gas.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">The ionized gas contacts the workpiece, creating a <strong>transferred arc</strong> from electrode &rarr; workpiece.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">The constricted arc superheats to <strong>~40,000&deg;F</strong> &mdash; roughly 7&times; hotter than the surface of the sun &mdash; melting the metal.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">High-velocity gas <strong>blows the molten metal away</strong>, creating a narrow cut called the <strong>kerf</strong>.</div></div>
+      </div>
+      <div class="callout callout-fire">
+        <span class="callout-icon">&#128293;</span>
+        <div><strong>Key concept:</strong> Plasma cutting only works on <strong>electrically conductive</strong> materials &mdash; steel, aluminum, stainless, copper, brass. It cannot cut wood, plastic, glass, or stone.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>The Software Pipeline: CAD &rarr; CAM &rarr; CNC</h3>
+      <table>
+        <thead><tr><th>Stage</th><th>Software</th><th>What It Does</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CAD</strong></td><td>SolidWorks, Illustrator, Inkscape</td><td>You <em>design</em> the shape. 2D geometry with closed contours.</td><td><code>.DXF</code> or <code>.SVG</code></td></tr>
+          <tr><td><strong>CAM</strong></td><td>SheetCam</td><td>Converts geometry to a <strong>toolpath</strong> &mdash; adds kerf offset, lead-ins, pierce points, feed rates.</td><td><code>.TAP</code> G-code</td></tr>
+          <tr><td><strong>CNC</strong></td><td>CommandCNC</td><td>Reads G-code and <strong>drives the motors</strong>. Controls torch on/off, THC, pause/resume.</td><td>Finished part</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-green">
+        <span class="callout-icon">&#9989;</span>
+        <div><strong>Our workflow:</strong> Design at your <strong>workstation</strong> &rarr; export DXF to USB &rarr; walk to the <strong>plasma station</strong> &rarr; SheetCam &amp; CommandCNC run on the Arclight's built-in computer.</div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="assets/photos/machine-setup.jpg" alt="Arclight CNC plasma table showing air supply, water table, and ground clamp setup">
+      <div class="caption"><strong>Machine setup reference:</strong> Air supply connection, water table level verification, Hypertherm power switch location, and ground clamp positioning. From the Arclight Dynamics user manual.</div>
+    </div>
+
+    <div class="card">
+      <h3>Torch Height Control (THC)</h3>
+      <p>The distance between the torch tip and the metal &mdash; called <strong>standoff</strong> &mdash; directly controls cut quality. Our Arclight includes <strong>automatic Torch Height Control</strong> that maintains the correct height even on warped steel:</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Initial Height Sensing (IHS):</strong> Before each cut, the torch lowers until it <strong>touches the plate</strong>, establishing a Z-zero reference.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Pierce Height:</strong> Torch raises to a safe pierce height and the arc fires. This protects the nozzle from molten blowback.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Cut Height via Arc Voltage:</strong> THC reads arc voltage in real-time. Higher voltage = torch too far &rarr; lowers. Lower voltage = torch too close &rarr; raises. Happens many times per second.</div></div>
+      </div>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- PHASE 2: DESIGN                             -->
+  <!-- SECTION 2: DESIGN                           -->
   <!-- ════════════════════════════════════════════ -->
   <div id="design">
     <div class="section-header">
       <div class="section-icon" style="background:var(--charcoal);">2</div>
-      <h2>Design &amp; Export Your File
-        <small>Create your design in CAD software and export a clean file the plasma table can use.</small>
+      <h2>Design: Create Your Artwork
+        <small>Start in SolidWorks, Illustrator, or with an AI-generated image. Fix islands before export.</small>
       </h2>
       <span class="section-tag">Workstation</span>
     </div>
 
-    <div class="learning-note">
-      <span class="icon">&#127919;</span>
-      <div><strong>Learning objective:</strong> Export a plasma-ready DXF or SVG from SolidWorks, Illustrator, or Inkscape with correct settings &mdash; closed paths, outlined text, proper scale, and no floating islands.</div>
+    <!-- AI PROMPT -->
+    <div class="card card-accent">
+      <h3>Option A: AI Image &rarr; SolidWorks Autotrace</h3>
+      <p>Generate a plasma-ready silhouette with AI, then trace it in SolidWorks:</p>
+      <div style="background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius); padding:0.75rem 1rem; margin:0.75rem 0; font-family:'JetBrains Mono',monospace; font-size:0.85rem; line-height:1.6;">
+        "Create a <strong>high-contrast black and white silhouette</strong> of [subject]. <strong>Solid black shapes on pure white background.</strong> No gradients, no gray tones, no shading. All interior details must be <strong>connected to the outer border</strong> with visible bridges. Design it as a <strong>single continuous stencil</strong> &mdash; no floating pieces. Clean vector-style edges, minimum detail width <strong>3mm</strong>."
+      </div>
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; margin:0.75rem 0 0.5rem; text-transform:uppercase;">SolidWorks Autotrace Steps</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Enable Add-In:</strong> Tools &rarr; Add-Ins &rarr; check <em>Autotrace</em></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>New Part</strong> &rarr; open sketch on <em>Front Plane</em></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Insert image:</strong> Tools &rarr; Sketch Tools &rarr; <em>Sketch Picture</em> &rarr; select your PNG</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Scale image</strong> to your desired final cut size <em>now</em> (not later)</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Click the <strong>&rarr; arrow</strong> in Sketch Picture panel to enter Autotrace mode</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Select area</strong> with rectangle tool &rarr; click <em>Begin Trace</em></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Adjust <strong>Color Tolerance</strong> &uarr; and <strong>Recognition Tolerance</strong> &darr; until outlines are clean</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Click <strong>Apply</strong> &rarr; repeat for missed areas &rarr; <strong>OK</strong></div></div>
+      </div>
     </div>
 
-    <div class="card-grid">
-      <a href="guides/plasma-workflow.html" class="card">
-        <span class="card-type guide">Step-by-Step Guide</span>
-        <h3>Plasma File Workflow</h3>
-        <p>The complete 4-step pipeline: Design &rarr; Export &rarr; CAM &rarr; Cut. Covers export settings for SolidWorks, Illustrator, Inkscape, and VCarve. DXF vs SVG comparison, troubleshooting, and pre-flight checklist.</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; 1 page</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
+    <!-- FLOATING ISLANDS -->
+    <div class="card card-red" style="border-left-color:var(--red);">
+      <h3 style="color:var(--red);">&#9888; Fix Floating Islands &mdash; The #1 Fail Point</h3>
+      <p>An <strong>"island"</strong> is any enclosed interior shape not connected to the main body. When the plasma cuts around it, <strong>the island falls into the water table</strong>. Letters like <strong style="font-size:1.2em;">A B D O P Q R</strong> all have islands. So do eyes, nostrils, windows, and any interior detail.</p>
+      <div class="island-grid">
+        <div class="island-box island-bad">
+          <h4>&#10007; No Bridges &mdash; Falls Out</h4>
+          <div class="island-letters">A B D O</div>
+          <p>Interior pieces have nothing holding them. They drop through.</p>
         </div>
-      </a>
-
-      <a href="guides/ai-to-plasma-guide.html" class="card">
-        <span class="card-type guide">Step-by-Step Guide</span>
-        <h3>AI Image &rarr; Plasma Cut</h3>
-        <p>Generate a black &amp; white silhouette with AI, trace it in SolidWorks Autotrace, fix floating islands with bridges, export DXF, and run through SheetCam. Includes kerf reference table and the "nickel test."</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; 1 page</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
+        <div class="island-box island-good">
+          <h4>&#10003; Bridged &mdash; Stays Connected</h4>
+          <div class="island-letters" style="letter-spacing:6px;">A B D O</div>
+          <p>Small <strong>tabs/bridges</strong> connect each interior to the outer body.</p>
         </div>
-      </a>
+      </div>
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.9rem; margin:0.75rem 0 0.4rem; text-transform:uppercase;">How to Add Bridges in SolidWorks</h4>
+      <ul style="margin-left:1.25rem; font-size:0.9rem;">
+        <li>Zoom into each island &rarr; draw a <strong>small rectangle</strong> spanning the gap</li>
+        <li>Bridge width: <strong>&ge; material thickness</strong> (minimum 1/16" for 16ga, 3/32" for 12ga)</li>
+        <li>Use <strong>Trim Entities</strong> tool to merge the bridge into the path</li>
+        <li>Place bridges where they look natural &mdash; 2 bridges per island for large pieces</li>
+      </ul>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- PHASE 3: PREPARE (CAM)                      -->
+  <!-- SECTION 3: EXPORT                           -->
   <!-- ════════════════════════════════════════════ -->
-  <div id="prepare">
+  <div id="export">
     <div class="section-header">
-      <div class="section-icon" style="background:var(--fire);">3</div>
-      <h2>Prepare Toolpaths in SheetCam
-        <small>Import your file into SheetCam, set the correct tool for your gauge, create operations, verify toolpaths, and post-process to G-code.</small>
+      <div class="section-icon" style="background:var(--charcoal);">3</div>
+      <h2>Export: DXF or SVG for SheetCam
+        <small>Choose the right format and settings for your design software.</small>
+      </h2>
+      <span class="section-tag">Workstation</span>
+    </div>
+
+    <div class="card">
+      <h3>Export Settings by Software</h3>
+      <table>
+        <thead><tr><th>Software</th><th>Export As</th><th>Critical Settings</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>SolidWorks</strong></td>
+            <td><code>.DXF</code></td>
+            <td>R12/R14 format &middot; &#9745; Splines as polylines &middot; &#9745; High Quality DWG &middot; &#9745; Merge Points &middot; Scale 1:1</td>
+          </tr>
+          <tr>
+            <td><strong>Illustrator</strong></td>
+            <td><code>.SVG</code></td>
+            <td>File &rarr; Export As &rarr; SVG &middot; Profile: SVG 1.1 &middot; Type: Convert to Outline &middot; <strong>Never export DXF from AI</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Inkscape</strong></td>
+            <td><code>.SVG</code></td>
+            <td>Plain SVG (not Inkscape SVG) &middot; Path &rarr; Object to Path first &middot; Combine all paths (Ctrl+K)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-red">
+        <span class="callout-icon">&#9888;</span>
+        <div><strong>Illustrator DXF exports are broken.</strong> Adobe segments arcs into hundreds of tiny line fragments. <em>Always</em> use SVG from Illustrator &mdash; SheetCam reads it at 1:1 scale with clean geometry.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>DXF vs SVG &mdash; When to Use Each</h3>
+      <div class="compare-grid">
+        <div class="compare-box dxf">
+          <h4>DXF</h4>
+          <ul>
+            <li><strong>Use from:</strong> SolidWorks, AutoCAD, QCAD</li>
+            <li>Must be R12/R14 with polylines + arcs</li>
+            <li>True arcs = cleanest geometry possible</li>
+            <li>Industry standard for engineering drawings</li>
+            <li>Splines cause jagged cuts in SheetCam</li>
+          </ul>
+        </div>
+        <div class="compare-box svg">
+          <h4>SVG</h4>
+          <ul>
+            <li><strong>Use from:</strong> Illustrator, Inkscape, web graphics</li>
+            <li>Imports at 1:1 scale &mdash; no sizing issues</li>
+            <li>Fewer nodes = smoother toolpaths</li>
+            <li>Best for artistic/sign work &amp; logos</li>
+            <li>SheetCam handles SVG very well</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout callout-blue">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Rule of thumb:</strong> <em>Engineering parts</em> &rarr; DXF from SolidWorks. <em>Art, signs, logos</em> &rarr; SVG from Illustrator or Inkscape.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>SolidWorks &rarr; DXF Quick Steps</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Delete</strong> the sketch picture (image). Only sketch geometry should remain.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Right-click flat face &rarr; <strong>Export to DXF/DWG</strong></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Set format to <code>R12</code> &middot; Check <em>"Splines as Polylines"</em></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Check <em>"High Quality DWG"</em> + <em>"Merge Points"</em> &middot; Scale <strong>1:1</strong></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Remove all dimensions, notes, and title blocks</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Save to USB:</strong> <code>LastF_ProjectName.dxf</code></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SECTION 4: SHEETCAM                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="sheetcam">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--fire);">4</div>
+      <h2>SheetCam: Generate Toolpaths
+        <small>Import your file, select the right tool for your gauge, create operations, verify, and post-process.</small>
       </h2>
       <span class="section-tag">Plasma Station</span>
     </div>
 
-    <div class="learning-note">
-      <span class="icon">&#9881;&#65039;</span>
-      <div><strong>Learning objective:</strong> Create a contour operation in SheetCam with the correct kerf, feed rate, lead-in, and offset direction for your material gauge, then generate a .tap file using the CommandCNC post processor.</div>
+    <div class="callout callout-red" style="margin-top:0;">
+      <span class="callout-icon">&#9940;</span>
+      <div><strong>THE #1 RULE:</strong> SheetCam applies kerf compensation automatically. Your DXF should be drawn at <em>exact final size</em>. If you already pre-compensated in SolidWorks, your part will be the <strong>wrong size</strong>. Do not double-compensate.</div>
     </div>
 
-    <div class="card-grid">
-      <a href="guides/sheetcam-commandcnc-guide.html" class="card">
-        <span class="card-type guide">Step-by-Step Guide</span>
-        <h3>SheetCam + CommandCNC Station Guide</h3>
-        <p>Complete 4-page station reference. Covers importing DXF, selecting gauge-specific tools (kerf/feed/pierce values from Hypertherm cut charts), contour operations, offset direction, lead-ins, simulation, post-processing, and the full CommandCNC workflow including dry run and live cut.</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; 4 pages</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
+    <div class="photo-card">
+      <img src="assets/photos/sheetcam-import.jpg" alt="SheetCam interface showing DXF import and drawing options">
+      <div class="caption"><strong>SheetCam import:</strong> File &rarr; Import Drawing, set drawing position to lower-left, scaling 1:1. Uncheck "Use colours as layer names" for clean imports.</div>
+    </div>
+
+    <div class="card">
+      <h3>Step 4.1 &mdash; Import Your DXF</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>File &rarr; Import Drawing</strong> &rarr; navigate to USB, select your <code>.dxf</code> file. If prompted about units, choose <strong>Inches</strong>.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Check scale immediately:</strong> Hover over a known dimension and read coordinates at the bottom. If your 12" sign shows as 6" &mdash; re-export. <em>Do not scale in SheetCam.</em></div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Check for red outlines</strong> = floating pieces with no bridge. If you see red on letter interiors (O, A, D, B) &mdash; <strong>stop and go back to add bridges.</strong></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Step 4.2 &mdash; Select the Correct Tool for Your Gauge</h3>
+      <p>Open the tool table: <strong>Tools &rarr; Tool Table</strong>. Select the existing tool for your material gauge, or create one using these values from the <strong>Hypertherm Powermax45 Duramax cut charts</strong> at 45A shielded, mild steel:</p>
+      <table>
+        <thead><tr><th>Setting</th><th>16 GA (0.060")</th><th>14 GA (0.075")</th><th>12 GA (0.105")</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tool Name</strong></td><td><code>PM45-16ga-45A</code></td><td><code>PM45-14ga-45A</code></td><td><code>PM45-12ga-45A</code></td></tr>
+          <tr><td><strong>Kerf Width</strong></td><td><code>0.039"</code></td><td><code>0.043"</code></td><td><code>0.049"</code></td></tr>
+          <tr><td><strong>Feed Rate</strong></td><td><code>200 IPM</code></td><td><code>160 IPM</code></td><td><code>110 IPM</code></td></tr>
+          <tr><td><strong>Pierce Height</strong></td><td><code>0.150"</code></td><td><code>0.150"</code></td><td><code>0.150"</code></td></tr>
+          <tr><td><strong>Pierce Delay</strong></td><td><code>0.4 sec</code></td><td><code>0.5 sec</code></td><td><code>0.8 sec</code></td></tr>
+          <tr><td><strong>Cut Height</strong></td><td><code>0.060"</code></td><td><code>0.060"</code></td><td><code>0.060"</code></td></tr>
+          <tr><td><strong>Plunge Rate</strong></td><td><code>100 IPM</code></td><td><code>100 IPM</code></td><td><code>100 IPM</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-green">
+        <span class="callout-icon">&#9989;</span>
+        <div><strong>Pro tip:</strong> Create and save all three tools, then go to <strong>File &rarr; Save Default Toolset</strong> so they load automatically every session. You only pick the right one per job.</div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="assets/photos/sheetcam-contour.jpg" alt="SheetCam contour operation showing toolpath setup and job options">
+      <div class="caption"><strong>SheetCam job options and contour operation:</strong> Set material dimensions (48" &times; 96" for a standard sheet), verify nesting, and create contour operations with correct offset direction.</div>
+    </div>
+
+    <div class="card">
+      <h3>Step 4.3 &mdash; Create a Contour Operation</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Operations &rarr; New Contour Operation</strong> (or the blue contour icon in toolbar)</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Select your tool</strong> from the dropdown (e.g., <code>PM45-14ga-45A</code>). All values auto-populate.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Set offset direction:</strong> <em>Outside offset</em> for perimeter cuts. <em>Inside offset</em> for holes and interior cutouts. <em>Never</em> "No offset" for cutting.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Lead-in type:</strong> Arc (preferred) at <code>0.125"</code> radius. Lead-in should start on scrap side, not on your finished edge.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">Cut <strong>interior features first</strong>, then outside profiles last. Create separate operations if needed.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">For detailed signs: check <strong>Loop sharp corners</strong> to compensate for arc lag at corners.</div></div>
+      </div>
+      <div class="callout callout-red">
+        <span class="callout-icon">&#9940;</span>
+        <div><strong>Offset mistake:</strong> If outside profile = Inside offset, or holes = Outside offset, SheetCam compensates the <strong>wrong direction</strong>. Your part shrinks or grows by the full kerf width. <strong>Outside contours = Outside offset. Interior = Inside offset. Always.</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Step 4.4 &mdash; Verify Toolpaths &amp; Post-Process</h3>
+      <div class="two-col">
+        <div>
+          <h4 style="font-family:'Oswald',sans-serif; font-size:0.9rem; text-transform:uppercase; margin-bottom:0.4rem;">Visual Check</h4>
+          <ul style="font-size:0.88rem; margin-left:1rem;">
+            <li><strong>Blue</strong> toolpath = outside cuts</li>
+            <li><strong>Green</strong> toolpath = inside cuts</li>
+            <li><strong>Red</strong> contours = unassigned/island &mdash; must fix</li>
+            <li>Arrow direction: Outside = CW, Inside = CCW</li>
+            <li>Lead-in dots on scrap side</li>
+          </ul>
         </div>
-      </a>
+        <div>
+          <h4 style="font-family:'Oswald',sans-serif; font-size:0.9rem; text-transform:uppercase; margin-bottom:0.4rem;">Simulate &amp; Post</h4>
+          <ul style="font-size:0.88rem; margin-left:1rem;">
+            <li>Click <strong>Simulate</strong> &mdash; watch the cut animate</li>
+            <li>Verify: inside features cut first, no overlaps</li>
+            <li><strong>Options &rarr; Machine &rarr; Post Processor</strong> must read <em>CommandCNC</em></li>
+            <li><strong>File &rarr; Run Post Processor</strong></li>
+            <li>Save to USB as <code>LastF_ProjectName.tap</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="assets/photos/sheetcam-post.jpg" alt="SheetCam showing simulation preview and post processor settings">
+      <div class="caption"><strong>Verify &amp; post:</strong> Simulation preview with toolpath animation (left). Ensure all inner cuts are done before outside profiles. Post processor must be set to CommandCNC/CandCNC format.</div>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- PHASE 4: CUT                                -->
+  <!-- SECTION 5: CUT                              -->
   <!-- ════════════════════════════════════════════ -->
   <div id="cut">
     <div class="section-header">
-      <div class="section-icon" style="background:var(--red);">4</div>
-      <h2>Cut &amp; Troubleshoot
-        <small>Run the job on the Arclight, monitor the cut, and diagnose common problems.</small>
+      <div class="section-icon" style="background:var(--red);">5</div>
+      <h2>Cut: CommandCNC Machine Operation
+        <small>Safety checks, consumables, homing, zeroing, dry run, and live cut.</small>
       </h2>
       <span class="section-tag">At the Table</span>
     </div>
 
-    <div class="learning-note">
-      <span class="icon">&#9888;&#65039;</span>
-      <div><strong>Learning objective:</strong> Safely execute a plasma cut from homing through live cut, including consumable inspection, dry run, THC verification, and post-cut quality checks. Diagnose dross, failed pierces, and wrong-size parts.</div>
+    <div class="callout callout-red" style="margin-top:0;">
+      <span class="callout-icon">&#9940;</span>
+      <div><strong>BEFORE TOUCHING THE MACHINE &mdash; EVERY TIME:</strong> Safety glasses ON &middot; Welding shade nearby (shade 5+) &middot; No loose clothing &middot; Water table filled to slat level &middot; Air compressor ON, 85+ PSI &middot; Ground clamp secure on material &middot; E-stop accessible</div>
     </div>
 
-    <div class="card-grid">
-      <a href="guides/sheetcam-commandcnc-guide.html#page3" class="card">
-        <span class="card-type safety">Safety &amp; Operation</span>
-        <h3>Machine Operation &amp; Safety</h3>
-        <p>Pages 3&ndash;4 of the Station Guide: consumable checks, homing vs zeroing, torch disable protocol, dry run procedure, live cut monitoring, THC, and the complete pre-cut safety checklist.</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; Pages 3-4</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
+    <!-- CONSUMABLES -->
+    <div class="card">
+      <h3>Check Consumables Before Every Session</h3>
+      <p>Worn consumables cause bad cut quality, excessive dross, and failed pierces &mdash; <em>no amount of software tweaking fixes worn parts.</em></p>
+      <div class="consumable-grid">
+        <div class="consumable-card wear">
+          <div class="part-icon">&#11045;</div>
+          <div class="part-name">Nozzle</div>
+          <div class="part-detail">Replace when hole is oval, oversized, or gouged. <strong>Most common wear part.</strong></div>
         </div>
-      </a>
+        <div class="consumable-card wear">
+          <div class="part-icon">&#11042;</div>
+          <div class="part-name">Electrode</div>
+          <div class="part-detail">Replace when hafnium pit depth exceeds <strong>0.040"</strong> (~1mm).</div>
+        </div>
+        <div class="consumable-card">
+          <div class="part-icon">&#9678;</div>
+          <div class="part-name">Swirl Ring</div>
+          <div class="part-detail">Check for cracks or melted holes. Longest-lasting part.</div>
+        </div>
+        <div class="consumable-card">
+          <div class="part-icon">&#9633;</div>
+          <div class="part-name">Shield</div>
+          <div class="part-detail">Inspect for buildup/damage. Dirty shield = poor arc stability.</div>
+        </div>
+      </div>
+    </div>
 
-      <a href="guides/sheetcam-commandcnc-guide.html#page4" class="card">
-        <span class="card-type reference">Reference</span>
-        <h3>Troubleshooting Quick-Ref</h3>
-        <p>8 common problems with symptoms, causes, and fixes: dross (top/bottom), failed pierce, torch dive, wrong-size parts, rounded corners, falling islands, and arc transfer errors.</p>
-        <div class="card-footer">
-          <span class="format">HTML &middot; Page 4</span>
-          <span>Printable</span>
-          <span class="card-arrow">&rarr;</span>
-        </div>
-      </a>
+    <div class="photo-card">
+      <img src="assets/photos/consumables.jpg" alt="Hypertherm Powermax consumable parts diagram showing 45A shielded, FineCut, and 65A configurations">
+      <div class="caption"><strong>Consumable reference:</strong> 45A shielded consumables (top row) for all 12/14/16 gauge mild steel. Match amps to consumable rating &mdash; always. Part numbers shown for reordering.</div>
+    </div>
+
+    <!-- COMMANDCNC WORKFLOW -->
+    <div class="card">
+      <h3>CommandCNC Workflow</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Power On &amp; Release E-Stop.</strong> Press the green arm button on the Blade Runner box. Release E-stop in CommandCNC. Verify no axis alarms.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Home All Axes.</strong> Click Home All. Wait until each axis shows <strong>Homed</strong>. This is the machine's internal reference &mdash; <em>not</em> your part zero.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body" style="background:var(--red-bg); padding:6px; border-radius:4px;"><strong style="color:var(--red);">Set Torch Disable = ON.</strong> CRITICAL. Prevents torch from firing during jogging or dry runs. Only turn OFF when actually cutting.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Load G-Code:</strong> File &rarr; Open &rarr; navigate to USB &rarr; select your <code>.tap</code> file. Verify the shape looks correct in the preview.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Jog to Program Origin &amp; Zero X/Y:</strong> Move torch to the lower-left corner of where you want the cut. Click <strong>Zero X</strong> and <strong>Zero Y</strong>. <em>Do NOT zero Z</em> &mdash; the IHS probe handles Z automatically.</div></div>
+      </div>
+      <div class="callout callout-green">
+        <span class="callout-icon">&#128218;</span>
+        <div><strong>Homing vs Zeroing:</strong> <strong>Homing</strong> (step 2) tells the <em>machine</em> where it is. <strong>Zeroing</strong> (step 5) tells the machine where <em>your part</em> is. You home once on startup. You re-zero for every new part position.</div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="assets/photos/commandcnc-interface.jpg" alt="CommandCNC interface showing program loading, torch disable, and dry run procedure">
+      <div class="caption"><strong>CommandCNC operation:</strong> Loading file from USB (top-left), torch disable toggle, E-stop location, and the dry run sequence. Always dry run before live cutting.</div>
+    </div>
+
+    <!-- DRY RUN + LIVE CUT -->
+    <div class="card card-accent">
+      <h3>Dry Run &rarr; Live Cut</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Dry Run:</strong> Confirm Torch Disable is ON. Press <strong>Cycle Start</strong>. The gantry traces the entire program without firing. Watch for clearance, cut order, and fit on your sheet.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Turn Torch Disable OFF.</strong> This is the <em>only time</em> you turn it off. Everyone clear of the table. Welding shade available.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Verify THC = Auto/Enabled</strong> on the CommandCNC screen.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Press Cycle Start &mdash; Monitor the Cut.</strong> Watch actively. Keep one hand near Feed Hold or E-stop. Look for clean arc, minimal topside sparks, steady sound, no torch dragging.</div></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3 style="font-size:0.95rem;">Adjustable During Cut</h3>
+        <ul style="font-size:0.88rem; margin-left:1rem;">
+          <li><strong>Feed Rate Override:</strong> &plusmn; speed via knob or screen</li>
+          <li><strong>THC Voltage:</strong> &plusmn; target (raise = lower torch)</li>
+          <li><strong>Feed Hold:</strong> Pauses cut. Resume with Cycle Start.</li>
+        </ul>
+      </div>
+      <div class="card card-red" style="border-left-color:var(--red);">
+        <h3 style="font-size:0.95rem; color:var(--red);">Never Do During Cut</h3>
+        <ul style="font-size:0.88rem; margin-left:1rem;">
+          <li><strong>Touch material</strong> &mdash; hot metal, arc, water splash</li>
+          <li><strong>Walk away</strong> &mdash; operator must be present entire cut</li>
+          <li><strong>Move ground clamp</strong> &mdash; arc transfer failure</li>
+          <li><strong>Jog axes</strong> &mdash; lose position and crash</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <span class="callout-icon">&#9989;</span>
+      <div><strong>After the cut:</strong> Turn Torch Disable back ON. Let the piece cool. Remove from table, clean dross with flap disk or wire wheel, and verify dimensions with calipers. If dimensions are off by <em>exactly</em> one kerf width &mdash; you had the wrong offset direction.</div>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- TOOLS                                       -->
+  <!-- TROUBLESHOOTING                             -->
   <!-- ════════════════════════════════════════════ -->
-  <div id="tools">
+  <div id="troubleshoot">
     <div class="section-header">
-      <div class="section-icon" style="background:var(--green);">T</div>
-      <h2>Interactive Tools
-        <small>Web apps to help with pricing, file validation, and project management.</small>
+      <div class="section-icon" style="background:#7c3aed;">T</div>
+      <h2>Troubleshooting
+        <small>Common failures, symptoms, causes, and fixes.</small>
       </h2>
-      <span class="section-tag">Utilities</span>
     </div>
 
-    <div class="card-grid">
-      <a href="tools/kerf-checker.html" class="card">
-        <span class="card-type tool">Web Tool</span>
-        <h3>Kerf Check &mdash; DXF Validator</h3>
-        <p>Drag-and-drop your DXF file to check for duplicate paths, features narrower than kerf width, open paths, small holes, and tight spacing before importing to SheetCam.</p>
-        <div class="card-footer">
-          <span class="format">Web App</span>
-          <span>Browser-based</span>
-          <span class="card-arrow">&rarr;</span>
-        </div>
-      </a>
-
-      <a href="tools/student-store.html" class="card">
-        <span class="card-type tool">Web Tool</span>
-        <h3>Student Store &mdash; Pricing &amp; Projects</h3>
-        <p>Calculate material costs and selling prices for CNC plasma signs and 3D prints. Track projects, student earnings, inventory, and export to CSV.</p>
-        <div class="card-footer">
-          <span class="format">Web App</span>
-          <span>Browser-based</span>
-          <span class="card-arrow">&rarr;</span>
-        </div>
-      </a>
+    <div class="card">
+      <table>
+        <thead><tr><th>Problem</th><th>What You See</th><th>Cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Heavy dross bottom</strong></td><td>Hard metal beads stuck to underside</td><td>Cutting too slow</td><td>Increase feed rate 10&ndash;15%</td></tr>
+          <tr><td><strong>Feathery dross top</strong></td><td>Wispy metal curls on top edge</td><td>Cutting too fast</td><td>Decrease feed rate 10%. Check consumables.</td></tr>
+          <tr><td><strong>Failed pierce</strong></td><td>Torch fires but doesn't break through</td><td>Pierce delay too short, or worn parts</td><td>Increase pierce delay +0.2s. Replace consumables.</td></tr>
+          <tr><td><strong>Torch diving</strong></td><td>Nozzle crashes into plate</td><td>IHS failure or THC overcorrecting</td><td>Check IHS switch. Disable THC for small features.</td></tr>
+          <tr><td><strong>Part wrong size</strong></td><td>Dimensions off by kerf width</td><td>Wrong offset direction or double kerf</td><td>Outside = outside offset. Inside = inside. No pre-compensation.</td></tr>
+          <tr><td><strong>Rounded corners</strong></td><td>Sharp corners cut as arcs</td><td>Arc lag at corners</td><td>Enable <strong>Loop sharp corners</strong> in SheetCam.</td></tr>
+          <tr><td><strong>Pieces falling out</strong></td><td>Interior features drop into water</td><td>Floating islands &mdash; no bridges</td><td>Go back to SolidWorks. Add bridges at material thickness.</td></tr>
+          <tr><td><strong>Arc OK error</strong></td><td>Torch fires briefly, extinguishes</td><td>Ground clamp not on material</td><td>Move ground clamp to bare metal. Replace consumables.</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <!-- ════════════════════════════════════════════ -->
-  <!-- QUICK REFERENCE BAR                         -->
+  <!-- PRE-CUT CHECKLIST                           -->
   <!-- ════════════════════════════════════════════ -->
-  <div class="section-header" style="margin-top:3rem;">
-    <div class="section-icon" style="background:var(--charcoal);">&#128200;</div>
-    <h2>Quick Reference
-      <small>Numbers you'll use on every cut.</small>
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--green);">&#10003;</div>
+    <h2>Pre-Cut Checklist
+      <small>Complete at the station before every job.</small>
     </h2>
   </div>
 
-  <div class="specs-bar" style="background:var(--white); border:1.5px solid var(--border);">
-    <div class="spec-item">
-      <div class="value" style="color:var(--dark);">16 GA</div>
-      <div class="label" style="color:var(--steel);">Kerf: 0.039" &middot; Feed: 200 IPM &middot; Pierce: 0.4s</div>
-    </div>
-    <div class="spec-item">
-      <div class="value" style="color:var(--dark);">14 GA</div>
-      <div class="label" style="color:var(--steel);">Kerf: 0.043" &middot; Feed: 160 IPM &middot; Pierce: 0.5s</div>
-    </div>
-    <div class="spec-item">
-      <div class="value" style="color:var(--dark);">12 GA</div>
-      <div class="label" style="color:var(--steel);">Kerf: 0.049" &middot; Feed: 110 IPM &middot; Pierce: 0.8s</div>
+  <div class="card" style="border-color:var(--green);">
+    <div class="two-col">
+      <div>
+        <ul class="checklist">
+          <li><strong>Air pressure:</strong> 85+ PSI, Powermax reads 60 PSI cut pressure</li>
+          <li><strong>Consumables:</strong> Nozzle and electrode inspected</li>
+          <li><strong>Powermax amperage:</strong> Dial set to 45A</li>
+          <li><strong>Water table:</strong> Filled to slat level</li>
+          <li><strong>Ground clamp:</strong> On bare metal on workpiece</li>
+          <li><strong>Material secured:</strong> Flat on slats, not rocking</li>
+          <li><strong>Correct tool:</strong> Right gauge selected in SheetCam</li>
+          <li><strong>Post processor:</strong> CommandCNC post used</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="checklist">
+          <li><strong>Offset direction:</strong> Outside = outside, interior = inside</li>
+          <li><strong>Toolpaths verified:</strong> Simulated, arrows correct</li>
+          <li><strong>No red outlines:</strong> All features bridged</li>
+          <li><strong>All axes homed</strong> in CommandCNC</li>
+          <li><strong>X/Y zeroed</strong> at program start on material</li>
+          <li><strong>Dry run complete:</strong> With Torch Disable ON</li>
+          <li><strong>THC:</strong> Set to Auto/Enabled</li>
+          <li><strong>Safety:</strong> Glasses, shade, area clear, E-stop ready</li>
+        </ul>
+      </div>
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════════ -->
+  <!-- KERF QUICK REFERENCE                        -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--fire);">&#9881;</div>
+    <h2>Quick Reference
+      <small>Numbers you'll use on every cut. Hypertherm Powermax45 @ 45A Shielded, Mild Steel.</small>
+    </h2>
+  </div>
+
+  <div class="specs-bar light">
+    <div class="spec-item">
+      <div class="value">16 GA</div>
+      <div class="label">Kerf: 0.039" &middot; Feed: 200 IPM &middot; Pierce: 0.4s</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">14 GA</div>
+      <div class="label">Kerf: 0.043" &middot; Feed: 160 IPM &middot; Pierce: 0.5s</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">12 GA</div>
+      <div class="label">Kerf: 0.049" &middot; Feed: 110 IPM &middot; Pierce: 0.8s</div>
+    </div>
+  </div>
+
+  <div class="callout callout-fire">
+    <span class="callout-icon">&#128170;</span>
+    <div><strong>Nickel test:</strong> No feature should be thinner than the edge of a nickel (~0.077"). If you can't fit a nickel in the gap, it's too thin to survive the cut. Minimum feature = 2&times; kerf width for your gauge.</div>
+  </div>
+
+  <table>
+    <thead><tr><th>Gauge</th><th>Thickness</th><th>Kerf Width</th><th>Min Feature</th><th>Min Bridge</th><th>Feed Rate</th><th>Pierce Delay</th></tr></thead>
+    <tbody>
+      <tr><td><strong>16 GA</strong></td><td>0.060"</td><td><code>0.039"</code></td><td>0.080"</td><td>0.063" (1/16")</td><td>200 IPM</td><td>0.4 sec</td></tr>
+      <tr><td><strong>14 GA</strong></td><td>0.075"</td><td><code>0.043"</code></td><td>0.090"</td><td>0.075" (5/64")</td><td>160 IPM</td><td>0.5 sec</td></tr>
+      <tr><td><strong>12 GA</strong></td><td>0.105"</td><td><code>0.049"</code></td><td>0.100"</td><td>0.105" (3/32")</td><td>110 IPM</td><td>0.8 sec</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:0.75rem; color:var(--steel); margin-top:0.5rem; text-align:center;"><em>Source: Hypertherm Powermax45 Duramax cut charts (810050) &middot; 45A Shielded &middot; Mild Steel</em></p>
+
 </div><!-- end container -->
 
-<!-- ═══════ FOOTER ═══════ -->
 <footer class="site-footer">
   <p><strong>Mr. McAteer</strong> &middot; CTE Metals &amp; Fabrication &middot; Crescent Valley High School &middot; Corvallis, OR</p>
-  <p style="margin-top:0.5rem;">Arclight Arc Pro &middot; Hypertherm Powermax 45 &middot; SheetCam &middot; CommandCNC</p>
-  <p style="margin-top:0.5rem;">Kerf values from Hypertherm Powermax45 Duramax cut charts (810050) &middot; 45A Shielded &middot; Mild Steel</p>
+  <p style="margin-top:0.5rem;">Arclight Arc Pro &middot; Hypertherm Powermax 45 &middot; SheetCam 6.1.38 &middot; CommandCNC 2.7.8</p>
   <p style="margin-top:1rem; font-size:0.75rem; opacity:0.6;">Rev. February 2026</p>
 </footer>
 
