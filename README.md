@@ -20,12 +20,6 @@ The curriculum follows a 4-phase instructional design:
 | **3. Prepare** | SheetCam CAM & CommandCNC operation | `guides/sheetcam-commandcnc-guide.html` |
 | **4. Cut** | Safety, live cut, troubleshooting | Pages 3-4 of station guide |
 
-## Interactive Tools
-
-| Tool | Description |
-|------|-------------|
-| **Kerf Checker** | DXF file validator — checks for duplicate paths, narrow features, open paths, small holes |
-| **Student Store** | Pricing calculator, project tracker, and earnings dashboard for student-run sales |
 
 ## Equipment
 
