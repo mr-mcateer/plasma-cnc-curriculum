@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Image → Plasma Cut: The Complete Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --fire: #E8600A;
+    --fire-glow: #FF8C38;
+    --fire-bg: #FFF3EB;
+    --dark: #121220;
+    --charcoal: #1E1E32;
+    --steel: #4A4A6A;
+    --mid: #6B6B8A;
+    --green: #1B8C3D;
+    --green-bg: #E8F5EC;
+    --red: #C62828;
+    --red-bg: #FDEAEA;
+    --blue: #1565C0;
+    --blue-bg: #E3F0FC;
+    --yellow: #F5A623;
+    --yellow-bg: #FFF8E7;
+    --yellow-border: #E6C200;
+    --border: #D0D0D8;
+    --bg-subtle: #F5F5F9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: letter; margin: 0.3in; }
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { box-shadow: none; margin: 0; }
+    .page-break { page-break-before: always; }
+  }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #D8D8DE;
+    color: var(--dark);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .page {
+    width: 8.5in; min-height: 11in; max-height: 11in; overflow: hidden;
+    margin: 0.2in auto; background: #fff;
+    padding: 0.25in 0.3in 0.2in;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+
+  /* ═══════════════════════════════════════ HEADER */
+  .hdr {
+    display: flex; align-items: center; gap: 12px;
+    padding-bottom: 7px;
+    border-bottom: 3.5px solid var(--fire);
+    margin-bottom: 8px;
+  }
+  .hdr-badge {
+    width: 44px; height: 44px; background: var(--charcoal);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .hdr-badge::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 12px;
+    border: 2px solid var(--fire); opacity: 0.5;
+  }
+  .hdr-badge svg { width: 26px; height: 26px; }
+  .hdr h1 {
+    font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.05;
+    color: var(--dark);
+  }
+  .hdr h1 .accent { color: var(--fire); }
+  .hdr-sub {
+    font-family: 'Source Sans 3', sans-serif; font-size: 10.5px;
+    color: var(--steel); font-weight: 400; text-transform: none; letter-spacing: 0;
+  }
+  .hdr-right {
+    margin-left: auto; text-align: right; font-size: 8.5px;
+    color: var(--steel); line-height: 1.5;
+  }
+  .hdr-right strong { color: var(--dark); }
+
+  /* ═══════════════════════════════════════ MEGA PIPELINE */
+  .mega-pipe {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 0;
+    margin-bottom: 8px; position: relative;
+  }
+  .mp-step {
+    text-align: center; padding: 7px 4px 6px;
+    border: 1.5px solid var(--border); border-left: none;
+    background: #FAFAFC; position: relative;
+  }
+  .mp-step:first-child { border-left: 1.5px solid var(--border); border-radius: 7px 0 0 7px; }
+  .mp-step:last-child { border-radius: 0 7px 7px 0; background: var(--fire-bg); }
+  .mp-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px;
+    color: #fff; margin-bottom: 2px;
+  }
+  .mp-num.dark { background: var(--charcoal); }
+  .mp-num.hot { background: var(--fire); }
+  .mp-title {
+    font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; color: var(--dark); line-height: 1.2;
+  }
+  .mp-detail {
+    font-size: 8px; color: var(--steel); margin-top: 1px; line-height: 1.3;
+  }
+  .mp-detail code {
+    font-family: 'JetBrains Mono', monospace; font-size: 7.5px;
+    background: var(--fire-bg); color: var(--fire); padding: 0 3px; border-radius: 2px;
+  }
+  .mp-arrow {
+    position: absolute; right: -7px; top: 50%; transform: translateY(-50%); z-index: 2;
+    width: 12px; height: 12px; background: #fff; border: 1.5px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .mp-arrow svg { width: 7px; height: 7px; fill: var(--fire); }
+  .mp-step:last-child .mp-arrow { display: none; }
+
+  /* ═══════════════════════════════════════ TWO-COL LAYOUT */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1; }
+  .full { grid-column: 1 / -1; }
+
+  /* ═══════════════════════════════════════ CARDS */
+  .card {
+    border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 7px 9px 6px; position: relative;
+  }
+  .card-h {
+    display: flex; align-items: center; gap: 5px; margin-bottom: 4px;
+  }
+  .card-h svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .card-h h2 {
+    font-family: 'Oswald', sans-serif; font-size: 11.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .card-accent { border-left: 3.5px solid var(--fire); }
+
+  /* ═══════════════════════════════════════ NUMBERED STEPS */
+  .steps { counter-reset: step; }
+  .step-item {
+    display: flex; gap: 7px; padding: 3.5px 0;
+    border-bottom: 1px solid #EEEEEF; font-size: 9.5px; line-height: 1.4;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    counter-increment: step; flex-shrink: 0;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--charcoal); color: #fff;
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 9px;
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  }
+  .step-num::before { content: counter(step); }
+  .step-body { flex: 1; }
+  .step-body strong { color: var(--dark); }
+  .step-body em { color: var(--fire); font-style: italic; }
+
+  /* ═══════════════════════════════════════ KERF TABLE */
+  .kerf-table {
+    width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 3px;
+  }
+  .kerf-table thead th {
+    background: var(--charcoal); color: #fff;
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 4px 6px; text-align: center;
+  }
+  .kerf-table thead th:first-child { border-radius: 5px 0 0 0; text-align: left; }
+  .kerf-table thead th:last-child { border-radius: 0 5px 0 0; }
+  .kerf-table td {
+    padding: 4px 6px; text-align: center; border-bottom: 1px solid #EEEEF2;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  }
+  .kerf-table td:first-child {
+    font-family: 'Oswald', sans-serif; font-weight: 600; text-align: left;
+    font-size: 10px; color: var(--dark);
+  }
+  .kerf-table tbody tr:last-child td { border-bottom: none; }
+  .kerf-table .highlight { background: var(--fire-bg); font-weight: 600; color: var(--fire); }
+
+  /* ═══════════════════════════════════════ ALERTS */
+  .alert {
+    border-radius: 5px; padding: 5px 7px; margin-top: 5px;
+    font-size: 9px; display: flex; gap: 5px; align-items: flex-start;
+  }
+  .alert svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 1px; }
+  .alert-red { background: var(--red-bg); border-left: 3px solid var(--red); }
+  .alert-red svg { fill: var(--red); }
+  .alert-yellow { background: var(--yellow-bg); border-left: 3px solid var(--yellow-border); }
+  .alert-yellow svg { fill: var(--yellow); }
+  .alert-blue { background: var(--blue-bg); border-left: 3px solid var(--blue); }
+  .alert-blue svg { fill: var(--blue); }
+  .alert-green { background: var(--green-bg); border-left: 3px solid var(--green); }
+  .alert-green svg { fill: var(--green); }
+
+  /* ═══════════════════════════════════════ ISLAND DIAGRAM */
+  .island-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+  .island-box {
+    border-radius: 5px; padding: 6px 8px; text-align: center; font-size: 9px;
+  }
+  .island-bad { background: var(--red-bg); border: 1.5px solid #E8A0A0; }
+  .island-good { background: var(--green-bg); border: 1.5px solid #A0D8B0; }
+  .island-box h4 {
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; margin-bottom: 2px;
+  }
+  .island-bad h4 { color: var(--red); }
+  .island-good h4 { color: var(--green); }
+  .island-letters {
+    font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700;
+    letter-spacing: 3px; margin: 2px 0;
+  }
+  .island-bad .island-letters { color: var(--red); }
+  .island-good .island-letters { color: var(--green); }
+
+  /* ═══════════════════════════════════════ SETTINGS BOX */
+  .sbox {
+    background: var(--bg-subtle); border-radius: 5px;
+    padding: 5px 7px; margin-top: 4px; font-size: 9px;
+  }
+  .sbox-title {
+    font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--steel);
+    margin-bottom: 2px;
+  }
+  .sbox ul { list-style: none; padding: 0; }
+  .sbox li { padding: 1.5px 0 1.5px 13px; position: relative; }
+  .sbox li::before {
+    content: '✓'; position: absolute; left: 0;
+    color: var(--green); font-weight: 700; font-size: 9px;
+  }
+  code.i {
+    font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+    background: #EEEEF4; padding: 0 3px; border-radius: 2px;
+  }
+
+  /* ═══════════════════════════════════════ MIN SIZE TABLE */
+  .min-table {
+    width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px;
+  }
+  .min-table th {
+    background: var(--charcoal); color: #fff;
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 8.5px;
+    text-transform: uppercase; padding: 3px 5px; text-align: left;
+  }
+  .min-table th:first-child { border-radius: 4px 0 0 0; }
+  .min-table th:last-child { border-radius: 0 4px 0 0; }
+  .min-table td { padding: 3px 5px; border-bottom: 1px solid #EEEEF2; }
+  .min-table tbody tr:last-child td { border-bottom: none; }
+
+  /* ═══════════════════════════════════════ CHECKLIST */
+  .checklist { list-style: none; padding: 0; font-size: 9.5px; }
+  .checklist li {
+    padding: 3px 0 3px 18px; position: relative;
+    border-bottom: 1px dashed #E0E0E8;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: ''; position: absolute; left: 0; top: 3.5px;
+    width: 12px; height: 12px; border: 1.5px solid var(--steel);
+    border-radius: 3px; background: #fff;
+  }
+
+  /* ═══════════════════════════════════════ FOOTER */
+  .footer {
+    margin-top: auto; padding-top: 5px;
+    border-top: 1.5px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 7.5px; color: var(--steel);
+  }
+  .footer strong { color: var(--dark); }
+  .page-num {
+    position: absolute; bottom: 10px; right: 16px;
+    font-family: 'Oswald', sans-serif; font-size: 8px; color: var(--mid);
+  }
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║                    PAGE 1                        ║
+     ╚══════════════════════════════════════════════════╝ -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-badge">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#E8600A"/></svg>
+    </div>
+    <div>
+      <h1>AI Image <span class="accent">→</span> Plasma Cut
+        <div class="hdr-sub">GenAI Black &amp; White → SolidWorks Trace → DXF → SheetCam → Arclight — zero wasted trips</div>
+      </h1>
+    </div>
+    <div class="hdr-right">
+      <strong>Mr. McAteer</strong> · CTE Metals &amp; Fab<br>
+      Crescent Valley HS<br>
+      45A Plasma · 12/14/16 GA Mild Steel
+    </div>
+  </div>
+
+  <!-- MEGA PIPELINE -->
+  <div class="mega-pipe">
+    <div class="mp-step">
+      <div class="mp-num dark">1</div>
+      <div class="mp-title">Generate</div>
+      <div class="mp-detail">AI creates B&amp;W image<br><code>.PNG</code> high contrast</div>
+      <div class="mp-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-num dark">2</div>
+      <div class="mp-title">Trace</div>
+      <div class="mp-detail">SolidWorks Autotrace<br>Image → sketch entities</div>
+      <div class="mp-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-num dark">3</div>
+      <div class="mp-title">Fix</div>
+      <div class="mp-detail">Bridges, islands, scale<br>Clean geometry</div>
+      <div class="mp-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-num dark">4</div>
+      <div class="mp-title">Export</div>
+      <div class="mp-detail">DXF R12 · polylines<br><code>.dxf</code> to USB</div>
+      <div class="mp-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-num hot">5</div>
+      <div class="mp-title">CAM</div>
+      <div class="mp-detail">SheetCam: kerf, leads<br><code>.ngc</code> G-code</div>
+      <div class="mp-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-num hot">6</div>
+      <div class="mp-title">Cut</div>
+      <div class="mp-detail">CommandCNC<br>Load → Run</div>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <!-- ═══ LEFT COLUMN ═══════════════════════════════ -->
+    <div style="display:flex;flex-direction:column;gap:7px;">
+
+      <!-- STEP 1: AI PROMPT -->
+      <div class="card card-accent">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          <h2 style="color:var(--charcoal);">Step 1 — AI Prompt for Plasma-Ready Images</h2>
+        </div>
+        <div class="sbox">
+          <div class="sbox-title">Use this prompt structure</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:5px 7px;margin-top:3px;font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.5;color:var(--dark);">
+            "Create a <strong>high-contrast black and white silhouette</strong> of [subject]. 
+            <strong>Solid black shapes on pure white background.</strong> 
+            No gradients, no gray tones, no shading. 
+            All interior details must be <strong>connected to the outer border</strong> 
+            with visible bridges. Design it as a <strong>single continuous stencil</strong> 
+            — no floating pieces. Clean vector-style edges, 
+            minimum detail width <strong>3mm</strong>."
+          </div>
+        </div>
+        <div class="alert alert-yellow">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div><strong>Key phrase:</strong> <em>"single continuous stencil"</em> tells the AI to connect islands. You'll still verify in SolidWorks, but this gets you 80% there.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2: SOLIDWORKS AUTOTRACE -->
+      <div class="card card-accent">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <h2 style="color:var(--charcoal);">Step 2 — SolidWorks Autotrace</h2>
+        </div>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Enable Add-In:</strong> Tools → Add-Ins → check <em>Autotrace</em></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>New Part →</strong> open sketch on <em>Front Plane</em></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Insert image:</strong> Tools → Sketch Tools → <em>Sketch Picture</em> → select your PNG</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Scale image</strong> to your desired final cut size <em>now</em> (not later)</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Click the <strong>→ arrow</strong> in Sketch Picture panel to enter Autotrace mode</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Select area</strong> with rectangle tool → click <em>Begin Trace</em></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Adjust <strong>Color Tolerance</strong> ↑ and <strong>Recognition Tolerance</strong> ↓ until outlines are clean</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Click <strong>Apply</strong> → repeat for any missed areas → <strong>OK</strong></div>
+          </div>
+        </div>
+        <div class="alert alert-blue">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div><strong>Pro tip:</strong> High-contrast B&amp;W = better trace. If the AI image has gray anti-aliasing, bump up <em>Color Tolerance</em> to capture edges. Minimum 300 DPI for clean results.</div>
+        </div>
+      </div>
+
+      <!-- STEP 3: ISLAND / BRIDGE FIX -->
+      <div class="card card-accent">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--red)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <h2 style="color:var(--red);">Step 3 — Fix Floating Islands (The #1 Fail Point)</h2>
+        </div>
+        <div style="font-size:9.5px;margin-bottom:4px;line-height:1.5;">
+          <strong>An "island"</strong> is any enclosed interior shape not connected to the main body. 
+          When plasma cuts it, <strong>the island falls out</strong>. Letters like 
+          <strong style="font-size:12px;">A B D O P Q R</strong> 
+          all have islands. So do eyes, nostrils, windows, and any interior detail.
+        </div>
+        <div class="island-grid">
+          <div class="island-box island-bad">
+            <h4>✗ No Bridges — Islands Fall Out</h4>
+            <div class="island-letters">A B D O</div>
+            <div>Interior pieces have <em>nothing</em> connecting them to the frame. They drop into the water table.</div>
+          </div>
+          <div class="island-box island-good">
+            <h4>✓ Bridged — Islands Stay Connected</h4>
+            <div class="island-letters" style="letter-spacing:5px;">A B D O</div>
+            <div>Small <strong>tabs/bridges</strong> connect each interior shape to the outer body. Nothing falls.</div>
+          </div>
+        </div>
+        <div class="sbox" style="margin-top:5px;">
+          <div class="sbox-title">How to Add Bridges in SolidWorks</div>
+          <ul>
+            <li>Zoom into each island → draw a <strong>small rectangle</strong> spanning the gap</li>
+            <li>Bridge width: <strong>≥ material thickness</strong> (minimum 1/16" for 16ga, 3/32" for 12ga)</li>
+            <li>Use <strong>Trim Entities</strong> tool to merge the bridge into the path</li>
+            <li>Place bridges where they look <em>intentional</em> — tuck into natural shapes</li>
+            <li>2 bridges per island for structural safety on larger pieces</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ RIGHT COLUMN ══════════════════════════════ -->
+    <div style="display:flex;flex-direction:column;gap:7px;">
+
+      <!-- KERF REFERENCE -->
+      <div class="card" style="border-color:var(--fire);">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--fire)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          <h2 style="color:var(--fire);">45A Kerf &amp; Minimum Size Reference</h2>
+        </div>
+        <table class="kerf-table">
+          <thead>
+            <tr>
+              <th>Gauge</th>
+              <th>Thickness</th>
+              <th>Kerf Width</th>
+              <th>Min Feature</th>
+              <th>Min Bridge</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>16 GA</td>
+              <td>0.060"</td>
+              <td class="highlight">0.039"</td>
+              <td>0.080"</td>
+              <td>0.063" (1/16")</td>
+            </tr>
+            <tr>
+              <td>14 GA</td>
+              <td>0.075"</td>
+              <td class="highlight">0.043"</td>
+              <td>0.090"</td>
+              <td>0.075" (5/64")</td>
+            </tr>
+            <tr>
+              <td>12 GA</td>
+              <td>0.105"</td>
+              <td class="highlight">0.049"</td>
+              <td>0.100"</td>
+              <td>0.105" (3/32")</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="alert alert-red">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <div><strong>Heat Affected Zone (HAZ):</strong> Plasma heats ~0.02–0.04" beyond the kerf. Features narrower than <strong>2× kerf width</strong> will warp, discolor, or melt through. That's your <em>Min Feature</em> column.</div>
+        </div>
+        <div class="alert alert-yellow" style="margin-top:4px;">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div><strong>Rule of thumb:</strong> Nothing thinner than a <strong>nickel's edge</strong> (~0.077"). If you can't fit a nickel in the gap, it's too thin to survive the cut.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4: EXPORT DXF -->
+      <div class="card card-accent">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <h2 style="color:var(--charcoal);">Step 4 — Export DXF from SolidWorks</h2>
+        </div>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Delete</strong> the sketch picture (image). Only sketch geometry should remain.</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Right-click face → <strong>Export to DXF/DWG</strong></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Set version to <code class="i">R12</code> · Check <em>"Splines as Polylines"</em></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Check <em>"High Quality DWG"</em> + <em>"Merge Points"</em> · Scale <strong>1:1</strong></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Save to USB</strong> with proper filename: <code class="i">LastF_ProjectName.dxf</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5-6: SHEETCAM + CUT -->
+      <div class="card card-accent">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--fire)"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <h2 style="color:var(--fire);">Steps 5–6 — SheetCam → Cut</h2>
+        </div>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Open DXF</strong> in SheetCam → verify dimensions by measuring a known feature</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Check for <strong style="color:var(--red);">red outlines</strong> = pieces that will fall out. Go back and bridge them.</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Select <strong>cut tool</strong> for your gauge → SheetCam applies kerf offset automatically</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body">Set <strong>lead-in type</strong> (arc preferred) → verify toolpath direction (CW outside, CCW inside)</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div class="step-body"><strong>Run Post Processor</strong> → save as <code class="i">.ngc</code> → load into CommandCNC → cut</div>
+          </div>
+        </div>
+        <div class="alert alert-green">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <div><strong>SheetCam handles kerf for you.</strong> Do <em>NOT</em> pre-compensate for kerf in SolidWorks. Draw your design at <strong>exact final size</strong> — SheetCam offsets the toolpath by half the kerf width.</div>
+        </div>
+      </div>
+
+      <!-- PRE-FLIGHT CHECKLIST -->
+      <div class="card" style="border-color:var(--green);">
+        <div class="card-h">
+          <svg viewBox="0 0 24 24" fill="var(--green)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <h2 style="color:var(--green);">Pre-Plasma Checklist</h2>
+        </div>
+        <ul class="checklist">
+          <li><strong>No floating islands</strong> — every interior shape is bridged</li>
+          <li>All detail features are <strong>wider than 2× kerf</strong> for your gauge</li>
+          <li>Bridges are <strong>≥ material thickness</strong> wide</li>
+          <li>Image deleted from sketch — <strong>only geometry remains</strong></li>
+          <li>Exported as <strong>DXF R12</strong> with splines as polylines</li>
+          <li>Filename follows: <code class="i">LastF_ProjectName.dxf</code></li>
+          <li>Measured a known dimension in SheetCam — <strong>scale is correct</strong></li>
+          <li>No <strong style="color:var(--red);">red outlines</strong> in SheetCam (nothing will fall out)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div><strong>Mr. McAteer</strong> · CTE Metals &amp; Fabrication · Crescent Valley HS · Corvallis, OR</div>
+    <div>Kerf values from Hypertherm Powermax45 Duramax cut charts (810050) · 45A Shielded · Mild Steel</div>
+    <div style="font-style:italic;">Rev. Feb 2026 · Page 1 of 1</div>
+  </div>
+</div>
+
+</body>
+</html>

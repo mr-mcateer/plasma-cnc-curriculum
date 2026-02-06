@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How a CNC Plasma Cutter Works — Student Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #E8600A;
+    --fire-glow: #FF8534;
+    --fire-bg: #FFF3EB;
+    --dark: #1A1A2E;
+    --charcoal: #2D2D44;
+    --steel: #6B6B8A;
+    --green: #1B8C3D;
+    --green-bg: #E8F5EC;
+    --red: #C62828;
+    --red-bg: #FDEAEA;
+    --blue: #1565C0;
+    --blue-bg: #E3F0FC;
+    --yellow-bg: #FFF8E7;
+    --yellow-border: #E6C200;
+    --border: #D0D0D8;
+    --bg-subtle: #F5F5F9;
+    --white: #FFFFFF;
+  }
+
+  @page {
+    size: letter;
+    margin: 0.3in;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 8.5pt;
+    color: var(--dark);
+    background: var(--white);
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    padding: 0.3in;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── HEADER ──────────────────────────── */
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--fire);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 20pt;
+    color: var(--dark);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .header h1 span { color: var(--fire); }
+  .header-meta {
+    text-align: right;
+    font-size: 7pt;
+    color: var(--steel);
+    line-height: 1.3;
+  }
+  .header-meta strong { color: var(--dark); font-weight: 600; }
+
+  /* ── INTRO BANNER ────────────────────── */
+  .intro-banner {
+    background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark) 100%);
+    color: var(--white);
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    font-size: 8.5pt;
+    line-height: 1.4;
+  }
+  .intro-banner b { color: var(--fire-glow); }
+
+  /* ── MAIN 2-COLUMN GRID ─────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* ── SECTION BLOCKS ──────────────────── */
+  .section {
+    break-inside: avoid;
+  }
+  .section-header {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    background: var(--charcoal);
+    padding: 4px 8px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-header .num {
+    background: var(--fire);
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9pt;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-body {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 7px 8px;
+    background: var(--white);
+  }
+
+  /* ── SUBSECTION HEADS ────────────────── */
+  .sub-head {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin: 6px 0 3px 0;
+    letter-spacing: 0.3px;
+  }
+  .sub-head:first-child { margin-top: 0; }
+
+  /* ── CALLOUT BOXES ───────────────────── */
+  .callout {
+    padding: 5px 7px;
+    border-radius: 4px;
+    margin: 5px 0;
+    font-size: 8pt;
+    line-height: 1.35;
+  }
+  .callout-fire { background: var(--fire-bg); border-left: 3px solid var(--fire); }
+  .callout-green { background: var(--green-bg); border-left: 3px solid var(--green); }
+  .callout-blue { background: var(--blue-bg); border-left: 3px solid var(--blue); }
+  .callout-yellow { background: var(--yellow-bg); border-left: 3px solid var(--yellow-border); }
+  .callout-red { background: var(--red-bg); border-left: 3px solid var(--red); }
+  .callout b { font-weight: 700; }
+  .callout-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 7.5pt;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── TABLES ──────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin: 4px 0;
+  }
+  th {
+    background: var(--charcoal);
+    color: var(--white);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 3px 5px;
+    text-align: left;
+  }
+  td {
+    padding: 3px 5px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--bg-subtle); }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: var(--fire); }
+
+  /* ── TAGS / BADGES ───────────────────── */
+  .tag {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+  }
+  .tag-fire { background: var(--fire); color: white; }
+  .tag-green { background: var(--green); color: white; }
+  .tag-blue { background: var(--blue); color: white; }
+  .tag-red { background: var(--red); color: white; }
+  .tag-charcoal { background: var(--charcoal); color: white; }
+
+  /* ── 4-STATES VISUAL ─────────────────── */
+  .states-row {
+    display: flex;
+    gap: 3px;
+    margin: 5px 0;
+  }
+  .state-box {
+    flex: 1;
+    text-align: center;
+    padding: 4px 3px;
+    border-radius: 4px;
+    font-size: 7.5pt;
+    line-height: 1.3;
+  }
+  .state-box .icon { font-size: 14pt; display: block; margin-bottom: 1px; }
+  .state-box .label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 8pt;
+    text-transform: uppercase;
+  }
+  .state-box .temp { font-size: 7pt; opacity: 0.8; }
+  .state-1 { background: #E3F0FC; color: var(--blue); }
+  .state-2 { background: #E3F0FC; color: #0D47A1; }
+  .state-3 { background: var(--bg-subtle); color: var(--steel); }
+  .state-4 { background: var(--fire-bg); color: var(--fire); border: 2px solid var(--fire); }
+
+  /* ── ARROW CONNECTOR ─────────────────── */
+  .arrow {
+    color: var(--steel);
+    font-size: 10pt;
+    display: flex;
+    align-items: center;
+    padding: 0 1px;
+  }
+
+  /* ── PIPELINE VISUAL ─────────────────── */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 5px 0;
+  }
+  .pipe-step {
+    flex: 1;
+    text-align: center;
+    padding: 4px 2px;
+    border-radius: 4px;
+    font-size: 7pt;
+    line-height: 1.25;
+    color: white;
+    font-weight: 600;
+  }
+  .pipe-step .pipe-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+  }
+  .pipe-step .pipe-detail {
+    font-weight: 400;
+    font-size: 6.5pt;
+    opacity: 0.9;
+  }
+  .pipe-arrow { color: var(--steel); font-size: 9pt; flex-shrink: 0; }
+
+  /* ── ANATOMY DIAGRAM (text-based) ────── */
+  .anatomy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin: 4px 0;
+  }
+  .anatomy-item {
+    background: var(--bg-subtle);
+    border-left: 3px solid var(--charcoal);
+    padding: 3px 6px;
+    border-radius: 0 3px 3px 0;
+    font-size: 7.5pt;
+    line-height: 1.3;
+  }
+  .anatomy-item strong {
+    color: var(--charcoal);
+    font-size: 8pt;
+    display: block;
+  }
+
+  /* ── FULL-WIDTH BOTTOM SECTION ───────── */
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  /* ── FOOTER ──────────────────────────── */
+  .footer {
+    margin-top: 6px;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+    font-size: 6.5pt;
+    color: var(--steel);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ── PRINT ───────────────────────────── */
+  @media print {
+    body { padding: 0.2in; }
+    .section-header, .tag, .intro-banner, .state-4, .pipe-step, th { -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>How a <span>CNC Plasma Cutter</span> Works</h1>
+  <div class="header-meta">
+    <strong>Mr. McAteer · CTE Metals &amp; Fabrication</strong><br>
+    Crescent Valley High School · Student Reference
+  </div>
+</div>
+
+<!-- ═══════════════ INTRO BANNER ═══════════════ -->
+<div class="intro-banner">
+  A CNC plasma cutter uses <b>electrically superheated gas (plasma)</b> to melt through metal while a <b>computer-controlled gantry</b> moves the torch along a programmed path. The result: precise, repeatable cuts from a digital file — no hand-guiding required. Our machine is an <b>Arclight Arc Pro</b> with a <b>Hypertherm Powermax 45</b> plasma source, <b>CommandCNC</b> controller, and <b>SheetCam</b> for toolpath generation.
+</div>
+
+<!-- ═══════════════ MAIN GRID ═══════════════ -->
+<div class="main-grid">
+
+  <!-- ────── COL 1, SECTION 1: THE SCIENCE ────── -->
+  <div class="section">
+    <div class="section-header"><div class="num">1</div> The Science — What Is Plasma?</div>
+    <div class="section-body">
+      <p>Matter exists in <b>four states</b>. Add enough energy and matter transforms from one state to the next. Plasma is the <i>fourth state</i> — gas so hot it becomes electrically conductive.</p>
+      <div class="states-row">
+        <div class="state-box state-1"><span class="icon">🧊</span><span class="label">Solid</span><span class="temp">Ice</span></div>
+        <div class="arrow">→</div>
+        <div class="state-box state-2"><span class="icon">💧</span><span class="label">Liquid</span><span class="temp">Water</span></div>
+        <div class="arrow">→</div>
+        <div class="state-box state-3"><span class="icon">♨️</span><span class="label">Gas</span><span class="temp">Steam</span></div>
+        <div class="arrow">→</div>
+        <div class="state-box state-4"><span class="icon">⚡</span><span class="label">Plasma</span><span class="temp">40,000°F</span></div>
+      </div>
+      <div class="sub-head">How the Cut Happens</div>
+      <p><b>1.</b> Compressed air is forced through a tiny <b>nozzle orifice</b> in the torch.</p>
+      <p><b>2.</b> A <b>pilot arc</b> sparks between the <b>electrode</b> (negative) and the <b>nozzle</b> (positive) inside the torch, ionizing the gas.</p>
+      <p><b>3.</b> The ionized gas stream contacts the metal workpiece, transferring the arc from nozzle → workpiece. This is the <b>transferred arc</b>.</p>
+      <p><b>4.</b> The constricted arc superheats to <b>~40,000°F</b> — roughly <b>7× hotter</b> than the surface of the sun — melting the metal instantly.</p>
+      <p><b>5.</b> High-velocity gas <b>blows the molten metal away</b>, creating a narrow cut called the <b>kerf</b>.</p>
+
+      <div class="callout callout-fire">
+        <b class="callout-label">Key Concept:</b> Plasma cutting only works on <b>electrically conductive</b> materials — steel, aluminum, stainless, copper, brass. It cannot cut wood, plastic, glass, or stone.
+      </div>
+
+      <div class="sub-head">Why Compressed Air?</div>
+      <p>Our Hypertherm uses <b>shop air</b> as the plasma gas. The oxygen in air reacts with mild steel, boosting cut speed and edge quality. Industrial systems may use pure O<sub>2</sub>, nitrogen, or argon blends for specialized materials.</p>
+    </div>
+  </div>
+
+  <!-- ────── COL 2, SECTION 2: MACHINE ANATOMY ────── -->
+  <div class="section">
+    <div class="section-header"><div class="num">2</div> Machine Anatomy — What's on the Table</div>
+    <div class="section-body">
+      <p>The CNC plasma system has <b>four major subsystems</b> that work together to make a cut:</p>
+
+      <div class="anatomy-grid">
+        <div class="anatomy-item">
+          <strong>🔥 Plasma Source</strong>
+          Hypertherm Powermax 45 — generates the 45-amp cutting arc. Connects to shop air &amp; 240V power. Houses the power supply and high-frequency arc starter.
+        </div>
+        <div class="anatomy-item">
+          <strong>🦾 Gantry &amp; Motors</strong>
+          Steel frame with <b>X-axis</b> (left/right), <b>Y-axis</b> (front/back), and <b>Z-axis</b> (up/down) stepper motors. Planetary gearboxes eliminate backlash for precise movement.
+        </div>
+        <div class="anatomy-item">
+          <strong>🧠 CNC Controller</strong>
+          CommandCNC software on a dedicated Linux computer reads <b>G-code</b> (.ngc files) and sends motor commands. Pause, rewind, re-cut any section.
+        </div>
+        <div class="anatomy-item">
+          <strong>🌊 Water Table</strong>
+          Sheet metal pan filled with water sits beneath the slats. Captures slag, cools the cut, and <b>reduces warpage, sparks, fumes, and noise</b>.
+        </div>
+      </div>
+
+      <div class="sub-head">The Torch Assembly — Consumable Parts</div>
+      <p>The cutting torch contains <b>five consumable parts</b> that wear out and must be replaced:</p>
+      <table>
+        <tr><th>Part</th><th>Function</th><th>Wears Because</th></tr>
+        <tr><td><b>Electrode</b></td><td>Negative terminal — emits electrons to sustain the arc</td><td>Hafnium insert erodes from electron emission &amp; extreme heat</td></tr>
+        <tr><td><b>Nozzle</b></td><td>Constricts the arc through a tiny orifice</td><td>Pilot arc contact &amp; heat slowly widen the orifice, degrading cut quality</td></tr>
+        <tr><td><b>Swirl Ring</b></td><td>Spins the gas into a vortex for arc stability</td><td>Heat &amp; debris — longest-lasting consumable</td></tr>
+        <tr><td><b>Shield Cap</b></td><td>Directs shielding gas to further constrict the arc</td><td>Spatter and heat exposure</td></tr>
+        <tr><td><b>Retaining Cap</b></td><td>Holds everything together</td><td>Thread wear from assembly/disassembly</td></tr>
+      </table>
+      <div class="callout callout-yellow">
+        <b class="callout-label">Consumable Life:</b> A single set of consumables lasts <b>hundreds of starts</b> at 45A on mild steel. Worn nozzles cause <b>wider kerf, angled cuts, and excessive dross</b>. Check for pitting on the electrode and an enlarged orifice on the nozzle.
+      </div>
+    </div>
+  </div>
+
+  <!-- ────── COL 1, SECTION 3: SOFTWARE PIPELINE ────── -->
+  <div class="section">
+    <div class="section-header"><div class="num">3</div> Software Pipeline — File to Finished Cut</div>
+    <div class="section-body">
+      <p>Three categories of software turn your <i>idea</i> into a <i>cut part</i>:</p>
+      <div class="pipeline">
+        <div class="pipe-step" style="background:var(--blue);">
+          <div class="pipe-label">CAD</div>
+          <div class="pipe-detail">Design</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" style="background:var(--fire);">
+          <div class="pipe-label">CAM</div>
+          <div class="pipe-detail">Toolpath</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" style="background:var(--charcoal);">
+          <div class="pipe-label">CNC</div>
+          <div class="pipe-detail">Machine Control</div>
+        </div>
+      </div>
+      <table>
+        <tr><th>Stage</th><th>Software</th><th>What It Does</th><th>Output</th></tr>
+        <tr>
+          <td><span class="tag tag-blue">CAD</span></td>
+          <td><b>SolidWorks</b>, Inkscape, Illustrator, QCAD</td>
+          <td>You <i>design</i> the shape. 2D geometry with closed contours.</td>
+          <td><span class="mono">.DXF</span> or <span class="mono">.SVG</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-fire">CAM</span></td>
+          <td><b>SheetCam</b></td>
+          <td>Converts geometry to a <b>toolpath</b> — adds kerf offset, lead-ins, pierce points, cut order, and feed rates.</td>
+          <td><span class="mono">.NGC</span> G-code</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-charcoal">CNC</span></td>
+          <td><b>CommandCNC</b></td>
+          <td>Reads G-code and <b>drives the motors</b> in real-time. Controls torch on/off, THC, pause/resume.</td>
+          <td>✂️ Finished part</td>
+        </tr>
+      </table>
+      <div class="callout callout-green">
+        <b class="callout-label">Our Workflow:</b> Design at your <b>workstation</b> → export DXF to USB → walk to the <b>plasma station</b> → SheetCam &amp; CommandCNC run on the Arclight's built-in Linux computer. One SheetCam license included with the table.
+      </div>
+
+      <div class="sub-head">What Is G-Code?</div>
+      <p>G-code is the <b>universal language of CNC machines</b>. It's a plain-text file of coordinates and commands that tell the machine where to move, how fast, and when to fire the torch. Example: <span class="mono">G01 X4.500 Y2.250 F120</span> = move in a straight line to position (4.5, 2.25) at 120 inches/min. SheetCam writes the G-code automatically — <i>you don't write it by hand</i>.</p>
+    </div>
+  </div>
+
+  <!-- ────── COL 2, SECTION 4: THC + CUT QUALITY ────── -->
+  <div class="section">
+    <div class="section-header"><div class="num">4</div> Torch Height Control &amp; Cut Quality</div>
+    <div class="section-body">
+      <div class="sub-head">Why Height Matters</div>
+      <p>The distance between the torch tip and the metal — called <b>standoff</b> — directly controls cut quality. Too high = wide kerf, rounded top edges, excessive bevel. Too low = risk of collision, nozzle damage, double-arcing.</p>
+
+      <div class="sub-head">Digital Torch Height Control (DTHC)</div>
+      <p>Our Arclight includes <b>automatic Torch Height Control</b> that maintains the correct standoff distance <i>during</i> cutting — even on warped steel. Here's how:</p>
+      <p><b>1. Initial Height Sensing (IHS):</b> Before each cut, the torch lowers until it <b>touches the plate</b>, establishing a Z-zero reference point.</p>
+      <p><b>2. Pierce Height:</b> Torch raises to a <b>safe pierce height</b> (higher than cut height) and the arc fires. This protects the nozzle from molten blowback.</p>
+      <p><b>3. Cut Height via Arc Voltage:</b> As the gantry moves, THC <b>reads the arc voltage</b> in real-time. Voltage is directly proportional to standoff distance — higher voltage = torch too high, lower voltage = torch too low. THC adjusts the Z-axis motor to maintain the <b>target voltage</b>.</p>
+
+      <div class="callout callout-blue">
+        <b class="callout-label">The Rule:</b> Arc voltage ↑ = torch too <b>far</b> → THC lowers. Arc voltage ↓ = torch too <b>close</b> → THC raises. This happens automatically, many times per second.
+      </div>
+
+      <div class="sub-head">What Controls Cut Quality?</div>
+      <table>
+        <tr><th>Parameter</th><th>Effect on Cut</th></tr>
+        <tr><td><b>Amperage</b></td><td>Higher amps = thicker material capacity but wider kerf. Our machine runs 20–45A.</td></tr>
+        <tr><td><b>Feed Rate (speed)</b></td><td>Too fast = incomplete cut, dross on bottom. Too slow = excessive heat, wide kerf, top melt.</td></tr>
+        <tr><td><b>Torch Height</b></td><td>Controls bevel angle. Correct height = near-vertical edges.</td></tr>
+        <tr><td><b>Air Pressure</b></td><td>Must be clean, dry, and at spec pressure. Moisture = poor cuts and fast consumable wear.</td></tr>
+        <tr><td><b>Consumable Condition</b></td><td>Worn electrode/nozzle = wider kerf, rough edges, angled cuts. Inspect regularly.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ────── FULL-WIDTH: KERF + SAFETY ────── -->
+  <div class="section full-width">
+    <div class="section-header" style="background:var(--fire);"><div class="num" style="background:white;color:var(--fire);">5</div> Kerf, Safety &amp; Key Numbers</div>
+    <div class="section-body" style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+
+      <div>
+        <div class="sub-head">Kerf Width at 45A (Mild Steel)</div>
+        <p>The <b>kerf</b> is the strip of material the arc vaporizes. SheetCam compensates for kerf automatically.</p>
+        <table>
+          <tr><th>Gauge</th><th>Thickness</th><th>Kerf Width</th><th>Min Feature</th></tr>
+          <tr><td><b>16 GA</b></td><td>0.060"</td><td class="mono">0.039"</td><td>0.080"</td></tr>
+          <tr><td><b>14 GA</b></td><td>0.075"</td><td class="mono">0.043"</td><td>0.090"</td></tr>
+          <tr><td><b>12 GA</b></td><td>0.105"</td><td class="mono">0.049"</td><td>0.100"</td></tr>
+        </table>
+        <p style="font-size:7pt; color:var(--steel); margin-top:3px;"><i>Source: Hypertherm Powermax45 Duramax cut charts (810050), 45A shielded</i></p>
+
+        <div class="callout callout-fire" style="margin-top:5px;">
+          <b class="callout-label">Nickel Test:</b> No feature should be thinner than the edge of a nickel (~0.077"). If it is, it <b>will not survive</b> the heat of the cut.
+        </div>
+      </div>
+
+      <div>
+        <div class="sub-head">Safety — Non-Negotiable Rules</div>
+        <table>
+          <tr><th style="background:var(--red);">Hazard</th><th style="background:var(--red);">Protection Required</th></tr>
+          <tr><td><b>UV Arc Radiation</b></td><td>Shade 5+ welding lens or plasma cutting glasses at <b>all times</b> when arc is active</td></tr>
+          <tr><td><b>Molten Metal &amp; Sparks</b></td><td>Leather gloves, long sleeves, closed-toe leather boots, no synthetic fabrics</td></tr>
+          <tr><td><b>Hot Metal</b></td><td>Cut parts stay hot for minutes. Use pliers or let cool. <b>Never</b> grab freshly cut steel bare-handed.</td></tr>
+          <tr><td><b>Noise (85+ dB)</b></td><td>Hearing protection required when plasma is firing</td></tr>
+          <tr><td><b>Fumes &amp; Particles</b></td><td>Water table reduces fumes; ensure ventilation is running. Avoid breathing over the cut.</td></tr>
+          <tr><td><b>Electrical Shock</b></td><td>Never touch electrode or nozzle when machine is on. Ground clamp must be secure on workpiece.</td></tr>
+        </table>
+        <div class="callout callout-red" style="margin-top:5px;">
+          <b class="callout-label">Ground Clamp Rule:</b> Always attach the ground clamp to the <b>main workpiece</b>, not to the piece being cut off. You must never become the path of least resistance.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end main-grid -->
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div class="footer">
+  <span>Arclight Arc Pro · CommandCNC · SheetCam · Hypertherm Powermax 45 · 45A Shielded Mild Steel</span>
+  <span>Mr. McAteer · CTE Metals &amp; Fabrication · CVHS · v1.0</span>
+</div>
+
+</body>
+</html>

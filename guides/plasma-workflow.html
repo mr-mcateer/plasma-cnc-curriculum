@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plasma File Workflow — From Design to Cut</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root {
+    --orange: #E8600A;
+    --orange-light: #FFF3EB;
+    --dark: #1A1A2E;
+    --charcoal: #2D2D44;
+    --steel: #4A4A6A;
+    --green: #1B8C3D;
+    --green-light: #E8F5EC;
+    --red: #C62828;
+    --red-light: #FDEAEA;
+    --blue: #1565C0;
+    --blue-light: #E3F0FC;
+    --yellow-bg: #FFF9E6;
+    --yellow-border: #E6C200;
+    --border: #D0D0D8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: letter;
+    margin: 0.35in;
+  }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { box-shadow: none; border: none; margin: 0; padding: 0.15in; }
+  }
+
+  body {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    background: #E8E8EC;
+    color: var(--dark);
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    max-height: 11in;
+    overflow: hidden;
+    margin: 0.25in auto;
+    background: #fff;
+    padding: 0.3in 0.35in 0.25in;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid var(--orange);
+    margin-bottom: 10px;
+  }
+
+  .header-icon {
+    width: 48px; height: 48px;
+    background: var(--orange);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .header-icon svg { width: 30px; height: 30px; fill: #fff; }
+
+  .header h1 {
+    font-family: 'Oswald', Impact, sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .header h1 span { color: var(--orange); }
+
+  .header-sub {
+    font-size: 11px;
+    color: var(--steel);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+
+  .header-right {
+    margin-left: auto;
+    text-align: right;
+    font-size: 9px;
+    color: var(--steel);
+    line-height: 1.5;
+  }
+
+  .header-right strong { color: var(--dark); }
+
+  /* ── MAIN GRID ─────────────────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+  }
+
+  /* ── PIPELINE — FULL WIDTH ─────────────── */
+  .pipeline-section {
+    grid-column: 1 / -1;
+  }
+
+  .pipeline-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .pipe-step {
+    text-align: center;
+    padding: 10px 8px 8px;
+    position: relative;
+    border: 1.5px solid var(--border);
+    background: #FAFAFC;
+  }
+
+  .pipe-step:first-child { border-radius: 8px 0 0 8px; }
+  .pipe-step:last-child { border-radius: 0 8px 8px 0; }
+  .pipe-step + .pipe-step { border-left: none; }
+
+  .pipe-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: var(--orange);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+  }
+
+  .pipe-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .pipe-soft {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--orange);
+    font-weight: 500;
+  }
+
+  .pipe-file {
+    margin-top: 3px;
+    font-size: 9px;
+    color: var(--steel);
+  }
+
+  .pipe-file code {
+    background: var(--orange-light);
+    color: var(--orange);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 9px;
+  }
+
+  .pipe-arrow {
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 14px; height: 14px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .pipe-arrow svg { width: 8px; height: 8px; fill: var(--orange); }
+
+  .pipe-step:last-child .pipe-arrow { display: none; }
+
+  /* ── SECTION CARDS ─────────────────────── */
+  .card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px 8px;
+    position: relative;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .card-header svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .card-header h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── EXPORT TABLE ──────────────────────── */
+  .export-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+    margin-top: 2px;
+  }
+
+  .export-table thead th {
+    background: var(--charcoal);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 5px 7px;
+    text-align: left;
+  }
+
+  .export-table thead th:first-child { border-radius: 5px 0 0 0; }
+  .export-table thead th:last-child { border-radius: 0 5px 0 0; }
+
+  .export-table tbody td {
+    padding: 5px 7px;
+    border-bottom: 1px solid #EEEEF2;
+    vertical-align: top;
+  }
+
+  .export-table tbody tr:last-child td { border-bottom: none; }
+
+  .export-table .sw-name {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .tag-best {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    font-size: 7.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  .tag-ok {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: 7.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  .tag-warn {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 7.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  code.inline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    background: #F0F0F5;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  /* ── SETTINGS BOXES ────────────────────── */
+  .settings-box {
+    background: #F6F6FA;
+    border-radius: 6px;
+    padding: 7px 9px;
+    margin-top: 6px;
+    font-size: 9.5px;
+  }
+
+  .settings-box .setting-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--charcoal);
+    margin-bottom: 3px;
+  }
+
+  .settings-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .settings-box li {
+    padding: 1.5px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .settings-box li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 10px;
+  }
+
+  /* ── ALERT BOXES ───────────────────────── */
+  .alert {
+    border-radius: 6px;
+    padding: 7px 9px;
+    margin-top: 6px;
+    font-size: 9.5px;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .alert svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert-warn { background: var(--red-light); border-left: 3px solid var(--red); }
+  .alert-warn svg { fill: var(--red); }
+
+  .alert-tip { background: var(--yellow-bg); border-left: 3px solid var(--yellow-border); }
+  .alert-tip svg { fill: var(--yellow-border); }
+
+  .alert-info { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .alert-info svg { fill: var(--blue); }
+
+  /* ── CHECKLIST ──────────────────────────── */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .checklist li {
+    padding: 3px 0 3px 20px;
+    position: relative;
+    border-bottom: 1px dashed #E0E0E8;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px;
+    width: 13px; height: 13px;
+    border: 1.5px solid var(--steel);
+    border-radius: 3px;
+    background: #fff;
+  }
+
+  /* ── DXF vs SVG COMPARISON ─────────────── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .compare-box {
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-size: 9.5px;
+  }
+
+  .compare-box.dxf { background: var(--blue-light); border: 1px solid #B3D4F7; }
+  .compare-box.svg { background: var(--green-light); border: 1px solid #B3DFC4; }
+
+  .compare-box h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .compare-box.dxf h3 { color: var(--blue); }
+  .compare-box.svg h3 { color: var(--green); }
+
+  .compare-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .compare-box li {
+    padding: 1.5px 0 1.5px 12px;
+    position: relative;
+    font-size: 9px;
+  }
+
+  .compare-box li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  .compare-box.dxf li::before { color: var(--blue); }
+  .compare-box.svg li::before { color: var(--green); }
+
+  /* ── TROUBLESHOOTING QUICK-REF ─────────── */
+  .trouble-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+    margin-top: 4px;
+  }
+
+  .trouble-table th {
+    background: var(--charcoal);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 6px;
+    text-align: left;
+  }
+
+  .trouble-table th:first-child { border-radius: 4px 0 0 0; }
+  .trouble-table th:last-child { border-radius: 0 4px 0 0; }
+
+  .trouble-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #EEEEF2;
+    vertical-align: top;
+  }
+
+  .trouble-table tbody tr:last-child td { border-bottom: none; }
+
+  /* ── FOOTER ────────────────────────────── */
+  .footer {
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8px;
+    color: var(--steel);
+  }
+
+  .footer strong { color: var(--dark); }
+
+  /* Column spans */
+  .full-width { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    </div>
+    <div>
+      <h1>Plasma File <span>Workflow</span>
+        <div class="header-sub">Design → Export → CAM → Cut — the complete file path for your Arclight table</div>
+      </h1>
+    </div>
+    <div class="header-right">
+      <strong>Crescent Valley HS</strong><br>
+      Metals &amp; Fabrication Lab<br>
+      Arclight + CommandCNC + SheetCam
+    </div>
+  </div>
+
+  <!-- ═══ PIPELINE ═══ -->
+  <div class="pipeline-section">
+    <div class="pipeline-label">The 4-Step Pipeline</div>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-num">1</div>
+        <div class="pipe-title">Design</div>
+        <div class="pipe-soft">SolidWorks · Illustrator · Inkscape</div>
+        <div class="pipe-file">Work file: <code>.sldprt</code> <code>.ai</code> <code>.svg</code></div>
+        <div class="pipe-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">2</div>
+        <div class="pipe-title">Export</div>
+        <div class="pipe-soft">Save As / Export</div>
+        <div class="pipe-file">Transfer file: <code>.dxf</code> or <code>.svg</code></div>
+        <div class="pipe-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">3</div>
+        <div class="pipe-title">CAM</div>
+        <div class="pipe-soft">SheetCam</div>
+        <div class="pipe-file">Toolpaths, kerf, lead-ins → <code>.ngc</code></div>
+        <div class="pipe-arrow"><svg viewBox="0 0 8 8"><path d="M1 4h5M4.5 1.5L7 4l-2.5 2.5"/></svg></div>
+      </div>
+      <div class="pipe-step" style="background: var(--orange-light);">
+        <div class="pipe-num">4</div>
+        <div class="pipe-title">Cut</div>
+        <div class="pipe-soft">CommandCNC</div>
+        <div class="pipe-file">Load <code>.ngc</code> → run job</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN CONTENT GRID ═══ -->
+  <div class="main-grid">
+
+    <!-- ── LEFT COLUMN ────────────────────── -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+
+      <!-- EXPORT TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <svg viewBox="0 0 24 24" fill="var(--orange)"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <h2>Export Settings by Software</h2>
+        </div>
+        <table class="export-table">
+          <thead>
+            <tr><th>Software</th><th>Export As</th><th>Critical Settings</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="sw-name">SolidWorks</span><span class="tag-best">Best</span></td>
+              <td><code class="inline">.DXF</code></td>
+              <td>
+                R12/R14 format<br>
+                ☑ Splines as polylines<br>
+                ☑ High quality DWG<br>
+                ☑ Merge points · Scale 1:1
+              </td>
+            </tr>
+            <tr>
+              <td><span class="sw-name">Illustrator</span><span class="tag-ok">Use SVG</span></td>
+              <td><code class="inline">.SVG</code></td>
+              <td>
+                File → Export As → SVG<br>
+                Profile: SVG 1.1<br>
+                Type: <em>Convert to Outline</em><br>
+                ⚠ <em>Never</em> export DXF from AI
+              </td>
+            </tr>
+            <tr>
+              <td><span class="sw-name">Inkscape</span><span class="tag-ok">Use SVG</span></td>
+              <td><code class="inline">.SVG</code></td>
+              <td>
+                <em>Plain SVG</em> (not Inkscape SVG)<br>
+                Path → Object to Path first<br>
+                Combine all paths (Ctrl+K)
+              </td>
+            </tr>
+            <tr>
+              <td><span class="sw-name">VCarve</span><span class="tag-warn">Design only</span></td>
+              <td><code class="inline">.DXF</code></td>
+              <td>
+                Design / import tool only<br>
+                Export DXF → SheetCam for CAM<br>
+                <em>No plasma post-processor</em>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert alert-warn" style="margin-top:8px;">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <div><strong>Illustrator DXF exports are broken.</strong> Adobe segments arcs into hundreds of tiny line fragments. <em>Always</em> use SVG from Illustrator — SheetCam reads it at 1:1 scale with clean geometry.</div>
+        </div>
+      </div>
+
+      <!-- DXF vs SVG -->
+      <div class="card">
+        <div class="card-header">
+          <svg viewBox="0 0 24 24" fill="var(--blue)"><path d="M10 3H4a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V4a1 1 0 00-1-1zm10 0h-6a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V4a1 1 0 00-1-1zM10 13H4a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1v-6a1 1 0 00-1-1zm10 0h-6a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1v-6a1 1 0 00-1-1z"/></svg>
+          <h2>DXF vs SVG — When to Use Each</h2>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-box dxf">
+            <h3>✦ DXF</h3>
+            <ul>
+              <li><strong>Use from:</strong> SolidWorks, AutoCAD, QCAD</li>
+              <li>Must be R12/R14 with polylines + arcs</li>
+              <li>True arcs = cleanest geometry possible</li>
+              <li>Industry standard for engineering drawings</li>
+              <li>⚠ Splines cause jagged cuts in SheetCam</li>
+            </ul>
+          </div>
+          <div class="compare-box svg">
+            <h3>✦ SVG</h3>
+            <ul>
+              <li><strong>Use from:</strong> Illustrator, Inkscape, web graphics</li>
+              <li>Imports at 1:1 scale — no sizing issues</li>
+              <li>Fewer nodes = smoother toolpaths</li>
+              <li>Best for artistic/sign work &amp; logos</li>
+              <li>SheetCam handles SVG very well</li>
+            </ul>
+          </div>
+        </div>
+        <div class="alert alert-info" style="margin-top:6px;">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div><strong>Rule of thumb:</strong> <em>Engineering parts</em> → DXF from SolidWorks. <em>Art, signs, logos</em> → SVG from Illustrator or Inkscape.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN ───────────────────── -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+
+      <!-- SOLIDWORKS STEP-BY-STEP -->
+      <div class="card">
+        <div class="card-header">
+          <svg viewBox="0 0 24 24" fill="var(--green)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+          <h2>SolidWorks → DXF Quick Steps</h2>
+        </div>
+        <div class="settings-box">
+          <div class="setting-title">Export Procedure</div>
+          <ul>
+            <li>Right-click flat face → <strong>Export to DXF/DWG</strong></li>
+            <li>Set format to <strong>R12</strong> (broadest compatibility)</li>
+            <li>Check <strong>"Splines as Polylines"</strong></li>
+            <li>Check <strong>"High Quality DWG"</strong> + <strong>"Merge Points"</strong></li>
+            <li>Verify scale is <strong>1:1</strong> with correct units (in or mm)</li>
+            <li>Remove all <em>dimensions, notes, and title blocks</em></li>
+          </ul>
+        </div>
+        <div class="settings-box" style="margin-top:4px;">
+          <div class="setting-title">Illustrator → SVG Procedure</div>
+          <ul>
+            <li>Select all → <strong>Type → Create Outlines</strong></li>
+            <li>Select all → <strong>Object → Path → Simplify</strong></li>
+            <li>File → <strong>Export As → SVG</strong> (not "Save As")</li>
+            <li>Profile: SVG 1.1 · Fonts: Convert to Outlines</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TROUBLESHOOTING -->
+      <div class="card">
+        <div class="card-header">
+          <svg viewBox="0 0 24 24" fill="var(--red)"><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM12 17.3c-.72 0-1.3-.58-1.3-1.3s.58-1.3 1.3-1.3 1.3.58 1.3 1.3-.58 1.3-1.3 1.3zm1-4.3h-2V7h2v6z"/></svg>
+          <h2>Troubleshooting Quick-Ref</h2>
+        </div>
+        <table class="trouble-table">
+          <thead>
+            <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Jagged arcs / faceted curves</td><td>Splines not converted</td><td>Re-export with <strong>Splines → Polylines</strong></td></tr>
+            <tr><td>Wrong size in SheetCam</td><td>Units mismatch (mm vs in)</td><td>Confirm units match before export</td></tr>
+            <tr><td>Extra phantom lines</td><td>Adobe DXF fragmentation</td><td>Use <strong>SVG</strong> instead of DXF</td></tr>
+            <tr><td>Text not cutting</td><td>Fonts not converted to paths</td><td>Object to Path / Create Outlines</td></tr>
+            <tr><td>Shapes missing in SheetCam</td><td>Open paths / ungrouped objects</td><td>Close all paths; Combine (Ctrl+K)</td></tr>
+            <tr><td>Overlapping double cuts</td><td>Duplicate stacked geometry</td><td>Select all → remove duplicates</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PRE-FLIGHT CHECKLIST -->
+      <div class="card">
+        <div class="card-header">
+          <svg viewBox="0 0 24 24" fill="var(--green)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <h2>Pre-Flight Checklist</h2>
+        </div>
+        <ul class="checklist">
+          <li>All text converted to <strong>outlines / paths</strong></li>
+          <li>All geometry = <strong>closed paths</strong> (no open endpoints)</li>
+          <li>No stray points, construction lines, or dimensions</li>
+          <li>File is correct <strong>scale (1:1)</strong> and <strong>units</strong> match</li>
+          <li>Inside cuts on <em>separate layer</em> from outside profiles</li>
+          <li>Verify in SheetCam: <strong>measure a known dimension</strong></li>
+        </ul>
+        <div class="alert alert-tip" style="margin-top:6px;">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <div><strong>Pro Tip:</strong> Design on <em>any</em> workstation → save to USB as DXF or SVG → do SheetCam <em>only at the plasma station</em>. This mirrors how real fabrication shops operate.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="footer">
+    <div><strong>Mr. McAteer</strong> · CTE Metals &amp; Fabrication · Crescent Valley HS</div>
+    <div>Arclight Arc Pro · CommandCNC · SheetCam · SolidWorks</div>
+    <div style="font-style:italic;">Rev. Feb 2026</div>
+  </div>
+
+</div>
+</body>
+</html>

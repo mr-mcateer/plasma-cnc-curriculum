@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNC Plasma Cutting — Student Curriculum | Mr. McAteer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --fire: #E8600A;
+    --fire-glow: #FF8C38;
+    --fire-bg: #FFF3EB;
+    --dark: #121220;
+    --charcoal: #1E1E32;
+    --steel: #4A4A6A;
+    --mid: #6B6B8A;
+    --green: #1B8C3D;
+    --green-bg: #E8F5EC;
+    --red: #C62828;
+    --red-bg: #FDEAEA;
+    --blue: #1565C0;
+    --blue-bg: #E3F0FC;
+    --yellow: #F5A623;
+    --yellow-bg: #FFF8E7;
+    --border: #D0D0D8;
+    --bg: #F0F0F4;
+    --white: #FFFFFF;
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.5;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark) 60%, #1a1020 100%);
+    color: var(--white);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 80%, rgba(232,96,10,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 20%, rgba(21,101,192,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; max-width: 800px; margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232,96,10,0.15);
+    border: 1px solid rgba(232,96,10,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--fire-glow);
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 span { color: var(--fire); }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    flex-wrap: wrap;
+  }
+
+  .hero-meta strong { color: rgba(255,255,255,0.8); }
+
+  /* ── NAV PIPELINE ── */
+  .nav-pipeline {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--steel);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .nav-step:hover {
+    background: var(--fire-bg);
+    color: var(--fire);
+  }
+
+  .nav-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+
+  .nav-arrow {
+    color: var(--border);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+
+  /* ── CONTAINER ── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--fire);
+  }
+
+  .section-header:first-child { margin-top: 0; }
+
+  .section-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    color: var(--white);
+  }
+
+  .section-header h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+  }
+
+  .section-header h2 small {
+    display: block;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--steel);
+    margin-top: 2px;
+  }
+
+  .section-tag {
+    margin-left: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--steel);
+    white-space: nowrap;
+  }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a.card:hover {
+    border-color: var(--fire);
+    box-shadow: 0 4px 20px rgba(232,96,10,0.12);
+    transform: translateY(-2px);
+  }
+
+  .card-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    width: fit-content;
+  }
+
+  .card-type.guide { background: var(--blue-bg); color: var(--blue); }
+  .card-type.reference { background: var(--green-bg); color: var(--green); }
+  .card-type.tool { background: var(--fire-bg); color: var(--fire); }
+  .card-type.safety { background: var(--red-bg); color: var(--red); }
+  .card-type.video { background: #F3E8FF; color: #7C3AED; }
+
+  .card h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    color: var(--steel);
+    flex: 1;
+  }
+
+  .card-footer {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--mid);
+  }
+
+  .card-footer .format {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  .card-arrow {
+    color: var(--fire);
+    font-size: 1.2rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  a.card:hover .card-arrow { opacity: 1; }
+
+  /* ── LEARNING PATH CONNECTOR ── */
+  .learning-note {
+    background: var(--yellow-bg);
+    border: 1.5px solid #E6C200;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9rem;
+  }
+
+  .learning-note .icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .learning-note strong { color: var(--dark); }
+
+  /* ── EQUIPMENT SPECS ── */
+  .specs-bar {
+    background: var(--charcoal);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .spec-item {
+    text-align: center;
+  }
+
+  .spec-item .value {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--fire);
+  }
+
+  .spec-item .label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--charcoal);
+    color: rgba(255,255,255,0.5);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    margin-top: 3rem;
+  }
+
+  .site-footer strong { color: rgba(255,255,255,0.8); }
+
+  .site-footer a {
+    color: var(--fire-glow);
+    text-decoration: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .container { padding: 1rem; }
+    .hero-meta { gap: 1rem; }
+    .section-header { flex-wrap: wrap; }
+    .section-tag { margin-left: 0; }
+    .card-grid { grid-template-columns: 1fr; }
+    .specs-bar { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">CTE Metals &amp; Fabrication</div>
+    <h1>CNC <span>Plasma</span> Cutting<br>Student Curriculum</h1>
+    <p>Everything you need to go from design idea to finished cut part on our Arclight CNC plasma table. Follow the learning path below.</p>
+    <div class="hero-meta">
+      <span><strong>Mr. McAteer</strong> &middot; Crescent Valley HS</span>
+      <span>Arclight Arc Pro &middot; Hypertherm Powermax45</span>
+      <span>Rev. February 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ STICKY NAV ═══════ -->
+<nav class="nav-pipeline">
+  <div class="nav-inner">
+    <a href="#understand" class="nav-step">
+      <div class="nav-num" style="background:var(--blue);">1</div>
+      Understand
+    </a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#design" class="nav-step">
+      <div class="nav-num" style="background:var(--charcoal);">2</div>
+      Design
+    </a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#prepare" class="nav-step">
+      <div class="nav-num" style="background:var(--fire);">3</div>
+      Prepare
+    </a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#cut" class="nav-step">
+      <div class="nav-num" style="background:var(--red);">4</div>
+      Cut
+    </a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#tools" class="nav-step">
+      <div class="nav-num" style="background:var(--green);">T</div>
+      Tools
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ═══════ EQUIPMENT SPECS BAR ═══════ -->
+  <div class="specs-bar">
+    <div class="spec-item">
+      <div class="value">Arclight Arc Pro</div>
+      <div class="label">CNC Table</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">Powermax 45</div>
+      <div class="label">Plasma Source</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">45A Shielded</div>
+      <div class="label">Consumables</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">SheetCam 6.1.38</div>
+      <div class="label">CAM Software</div>
+    </div>
+    <div class="spec-item">
+      <div class="value">CommandCNC 2.7.8</div>
+      <div class="label">Controller</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- PHASE 1: UNDERSTAND                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="understand">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--blue);">1</div>
+      <h2>Understand the Machine
+        <small>Learn what a CNC plasma cutter is, how it works, and why each step matters before you touch anything.</small>
+      </h2>
+      <span class="section-tag">Start Here</span>
+    </div>
+
+    <div class="learning-note">
+      <span class="icon">&#128218;</span>
+      <div><strong>Learning objective:</strong> After completing this section, you should be able to explain how plasma cuts metal, identify the four major subsystems of our machine, and describe the CAD &rarr; CAM &rarr; CNC software pipeline.</div>
+    </div>
+
+    <div class="card-grid">
+      <a href="guides/how-cnc-plasma-works.html" class="card">
+        <span class="card-type reference">Reference</span>
+        <h3>How a CNC Plasma Cutter Works</h3>
+        <p>The science behind plasma cutting, the four states of matter, machine anatomy, the software pipeline (CAD &rarr; CAM &rarr; CNC), torch height control, cut quality parameters, and safety fundamentals.</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; 1 page</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- PHASE 2: DESIGN                             -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="design">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--charcoal);">2</div>
+      <h2>Design &amp; Export Your File
+        <small>Create your design in CAD software and export a clean file the plasma table can use.</small>
+      </h2>
+      <span class="section-tag">Workstation</span>
+    </div>
+
+    <div class="learning-note">
+      <span class="icon">&#127919;</span>
+      <div><strong>Learning objective:</strong> Export a plasma-ready DXF or SVG from SolidWorks, Illustrator, or Inkscape with correct settings &mdash; closed paths, outlined text, proper scale, and no floating islands.</div>
+    </div>
+
+    <div class="card-grid">
+      <a href="guides/plasma-workflow.html" class="card">
+        <span class="card-type guide">Step-by-Step Guide</span>
+        <h3>Plasma File Workflow</h3>
+        <p>The complete 4-step pipeline: Design &rarr; Export &rarr; CAM &rarr; Cut. Covers export settings for SolidWorks, Illustrator, Inkscape, and VCarve. DXF vs SVG comparison, troubleshooting, and pre-flight checklist.</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; 1 page</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+
+      <a href="guides/ai-to-plasma-guide.html" class="card">
+        <span class="card-type guide">Step-by-Step Guide</span>
+        <h3>AI Image &rarr; Plasma Cut</h3>
+        <p>Generate a black &amp; white silhouette with AI, trace it in SolidWorks Autotrace, fix floating islands with bridges, export DXF, and run through SheetCam. Includes kerf reference table and the "nickel test."</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; 1 page</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- PHASE 3: PREPARE (CAM)                      -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="prepare">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--fire);">3</div>
+      <h2>Prepare Toolpaths in SheetCam
+        <small>Import your file into SheetCam, set the correct tool for your gauge, create operations, verify toolpaths, and post-process to G-code.</small>
+      </h2>
+      <span class="section-tag">Plasma Station</span>
+    </div>
+
+    <div class="learning-note">
+      <span class="icon">&#9881;&#65039;</span>
+      <div><strong>Learning objective:</strong> Create a contour operation in SheetCam with the correct kerf, feed rate, lead-in, and offset direction for your material gauge, then generate a .tap file using the CommandCNC post processor.</div>
+    </div>
+
+    <div class="card-grid">
+      <a href="guides/sheetcam-commandcnc-guide.html" class="card">
+        <span class="card-type guide">Step-by-Step Guide</span>
+        <h3>SheetCam + CommandCNC Station Guide</h3>
+        <p>Complete 4-page station reference. Covers importing DXF, selecting gauge-specific tools (kerf/feed/pierce values from Hypertherm cut charts), contour operations, offset direction, lead-ins, simulation, post-processing, and the full CommandCNC workflow including dry run and live cut.</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; 4 pages</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- PHASE 4: CUT                                -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="cut">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--red);">4</div>
+      <h2>Cut &amp; Troubleshoot
+        <small>Run the job on the Arclight, monitor the cut, and diagnose common problems.</small>
+      </h2>
+      <span class="section-tag">At the Table</span>
+    </div>
+
+    <div class="learning-note">
+      <span class="icon">&#9888;&#65039;</span>
+      <div><strong>Learning objective:</strong> Safely execute a plasma cut from homing through live cut, including consumable inspection, dry run, THC verification, and post-cut quality checks. Diagnose dross, failed pierces, and wrong-size parts.</div>
+    </div>
+
+    <div class="card-grid">
+      <a href="guides/sheetcam-commandcnc-guide.html#page3" class="card">
+        <span class="card-type safety">Safety &amp; Operation</span>
+        <h3>Machine Operation &amp; Safety</h3>
+        <p>Pages 3&ndash;4 of the Station Guide: consumable checks, homing vs zeroing, torch disable protocol, dry run procedure, live cut monitoring, THC, and the complete pre-cut safety checklist.</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; Pages 3-4</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+
+      <a href="guides/sheetcam-commandcnc-guide.html#page4" class="card">
+        <span class="card-type reference">Reference</span>
+        <h3>Troubleshooting Quick-Ref</h3>
+        <p>8 common problems with symptoms, causes, and fixes: dross (top/bottom), failed pierce, torch dive, wrong-size parts, rounded corners, falling islands, and arc transfer errors.</p>
+        <div class="card-footer">
+          <span class="format">HTML &middot; Page 4</span>
+          <span>Printable</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TOOLS                                       -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="tools">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--green);">T</div>
+      <h2>Interactive Tools
+        <small>Web apps to help with pricing, file validation, and project management.</small>
+      </h2>
+      <span class="section-tag">Utilities</span>
+    </div>
+
+    <div class="card-grid">
+      <a href="tools/kerf-checker.html" class="card">
+        <span class="card-type tool">Web Tool</span>
+        <h3>Kerf Check &mdash; DXF Validator</h3>
+        <p>Drag-and-drop your DXF file to check for duplicate paths, features narrower than kerf width, open paths, small holes, and tight spacing before importing to SheetCam.</p>
+        <div class="card-footer">
+          <span class="format">Web App</span>
+          <span>Browser-based</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+
+      <a href="tools/student-store.html" class="card">
+        <span class="card-type tool">Web Tool</span>
+        <h3>Student Store &mdash; Pricing &amp; Projects</h3>
+        <p>Calculate material costs and selling prices for CNC plasma signs and 3D prints. Track projects, student earnings, inventory, and export to CSV.</p>
+        <div class="card-footer">
+          <span class="format">Web App</span>
+          <span>Browser-based</span>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- QUICK REFERENCE BAR                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section-header" style="margin-top:3rem;">
+    <div class="section-icon" style="background:var(--charcoal);">&#128200;</div>
+    <h2>Quick Reference
+      <small>Numbers you'll use on every cut.</small>
+    </h2>
+  </div>
+
+  <div class="specs-bar" style="background:var(--white); border:1.5px solid var(--border);">
+    <div class="spec-item">
+      <div class="value" style="color:var(--dark);">16 GA</div>
+      <div class="label" style="color:var(--steel);">Kerf: 0.039" &middot; Feed: 200 IPM &middot; Pierce: 0.4s</div>
+    </div>
+    <div class="spec-item">
+      <div class="value" style="color:var(--dark);">14 GA</div>
+      <div class="label" style="color:var(--steel);">Kerf: 0.043" &middot; Feed: 160 IPM &middot; Pierce: 0.5s</div>
+    </div>
+    <div class="spec-item">
+      <div class="value" style="color:var(--dark);">12 GA</div>
+      <div class="label" style="color:var(--steel);">Kerf: 0.049" &middot; Feed: 110 IPM &middot; Pierce: 0.8s</div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="site-footer">
+  <p><strong>Mr. McAteer</strong> &middot; CTE Metals &amp; Fabrication &middot; Crescent Valley High School &middot; Corvallis, OR</p>
+  <p style="margin-top:0.5rem;">Arclight Arc Pro &middot; Hypertherm Powermax 45 &middot; SheetCam &middot; CommandCNC</p>
+  <p style="margin-top:0.5rem;">Kerf values from Hypertherm Powermax45 Duramax cut charts (810050) &middot; 45A Shielded &middot; Mild Steel</p>
+  <p style="margin-top:1rem; font-size:0.75rem; opacity:0.6;">Rev. February 2026</p>
+</footer>
+
+</body>
+</html>

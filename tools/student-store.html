@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Store</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --success: #16a34a;
+            --warning: #d97706;
+            --border: #e5e7eb;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        nav { display: flex; gap: 0.5rem; }
+
+        nav button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        nav button:hover { background: var(--accent-light); color: var(--accent); }
+        nav button.active { background: var(--accent); color: white; }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Grid */
+        .grid { display: grid; gap: 1rem; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+        /* Stats */
+        .stat { text-align: center; padding: 1rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Forms */
+        .form-group { margin-bottom: 1rem; }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: border-color 0.15s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #15803d; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { background: var(--bg); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        tr:hover { background: var(--bg); }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-complete { background: #d1fae5; color: #065f46; }
+        .badge-sold { background: #dbeafe; color: #1e40af; }
+        .badge-paid { background: #dcfce7; color: #166534; }
+
+        /* Calculator result */
+        .result-box {
+            background: var(--accent-light);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .result-price { font-size: 2.5rem; font-weight: 700; color: var(--accent); }
+        .result-breakdown { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            header { flex-direction: column; gap: 1rem; }
+            nav { flex-wrap: wrap; justify-content: center; }
+        }
+
+        /* Print styles */
+        @media print {
+            header, nav, .btn { display: none; }
+            .card { break-inside: avoid; }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Profit highlight */
+        .profit { color: var(--success); font-weight: 600; }
+
+        /* Formula display */
+        .formula {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.75rem;
+            background: var(--bg);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">📦 Student Store</div>
+        <nav>
+            <button class="active" data-view="dashboard">Dashboard</button>
+            <button data-view="calculator">Calculator</button>
+            <button data-view="projects">Projects</button>
+            <button data-view="earnings">Earnings</button>
+            <button data-view="inventory">Inventory</button>
+        </nav>
+    </header>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="view active">
+        <div class="container">
+            <div class="grid grid-4">
+                <div class="card">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-projects">0</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-revenue">$0</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-student-share">$0</div>
+                        <div class="stat-label">Student Earnings</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-pending">$0</div>
+                        <div class="stat-label">Pending Payout</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" onclick="switchView('calculator')">+ New Quote</button>
+                        <button class="btn btn-outline" onclick="switchView('projects')">View Projects</button>
+                        <button class="btn btn-outline" onclick="exportData()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <div id="recent-activity">
+                        <div class="empty-state">No recent activity</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Program Rules</h2>
+                <p><strong>Student Share:</strong> 50% of profit after materials, consumables, and tool costs</p>
+                <p><strong>Sales Channel:</strong> Instagram only (school account)</p>
+                <p><strong>Minimum:</strong> 1 project per student per semester</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div id="calculator" class="view">
+        <div class="container">
+            <div class="grid grid-2">
+                <!-- CNC Plasma Calculator -->
+                <div class="card">
+                    <h2>CNC Plasma Signs</h2>
+                    <div class="form-group">
+                        <label>Length (inches)</label>
+                        <input type="number" id="cnc-length" placeholder="12" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Width (inches)</label>
+                        <input type="number" id="cnc-width" placeholder="12" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Cut Time (hours)</label>
+                        <input type="number" id="cnc-hours" placeholder="0.5" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="calculateCNC()">Calculate Price</button>
+
+                    <div id="cnc-result" class="result-box" style="display:none;">
+                        <div class="result-price" id="cnc-price">$0.00</div>
+                        <div class="result-breakdown" id="cnc-breakdown"></div>
+                        <div class="profit" id="cnc-profit"></div>
+                    </div>
+
+                    <div class="formula">
+                        Cost = (L × W × $0.05) × 1.5 waste + ($3.60 × hours)<br>
+                        <em>Sell Price = Cost × 2 (100% markup)</em>
+                    </div>
+                </div>
+
+                <!-- 3D Print Calculator -->
+                <div class="card">
+                    <h2>3D Prints</h2>
+                    <div class="form-group">
+                        <label>Filament Weight (grams)</label>
+                        <input type="number" id="print-grams" placeholder="50" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Print Time (hours)</label>
+                        <input type="number" id="print-hours" placeholder="2" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="calculate3D()">Calculate Price</button>
+
+                    <div id="print-result" class="result-box" style="display:none;">
+                        <div class="result-price" id="print-price">$0.00</div>
+                        <div class="result-breakdown" id="print-breakdown"></div>
+                        <div class="profit" id="print-profit"></div>
+                    </div>
+
+                    <div class="formula">
+                        Cost = (grams × $0.04) + (hours × $0.10) + $3 setup<br>
+                        <em>Sell Price = Cost × 2 (100% markup)</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Quote -->
+            <div class="card">
+                <h2>Save as Project</h2>
+                <div class="grid grid-3">
+                    <div class="form-group">
+                        <label>Student Name</label>
+                        <input type="text" id="quote-student" placeholder="Student name">
+                    </div>
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="quote-customer" placeholder="Customer name">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Description</label>
+                        <input type="text" id="quote-desc" placeholder="Brief description">
+                    </div>
+                </div>
+                <button class="btn btn-success" onclick="saveProject()">Save Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div id="projects" class="view">
+        <div class="container">
+            <div class="card">
+                <h2>All Projects</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Student Share</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projects-table">
+                        <tr><td colspan="8" class="empty-state">No projects yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- EARNINGS -->
+    <div id="earnings" class="view">
+        <div class="container">
+            <div class="card">
+                <h2>Student Earnings Summary</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Projects Completed</th>
+                            <th>Total Earned</th>
+                            <th>Paid Out</th>
+                            <th>Balance Owed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="earnings-table">
+                        <tr><td colspan="5" class="empty-state">No earnings data</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="inventory" class="view">
+        <div class="container">
+            <div class="grid grid-2">
+                <div class="card">
+                    <h2>Add Inventory</h2>
+                    <div class="form-group">
+                        <label>Material Type</label>
+                        <select id="inv-type">
+                            <option value="steel">Steel Sheet</option>
+                            <option value="pla">PLA Filament</option>
+                            <option value="petg">PETG Filament</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="inv-qty" placeholder="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit Cost ($)</label>
+                        <input type="number" id="inv-cost" placeholder="25.00" step="0.01">
+                    </div>
+                    <button class="btn btn-primary" onclick="addInventory()">Add to Inventory</button>
+                </div>
+
+                <div class="card">
+                    <h2>Current Stock</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Qty</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table">
+                            <tr><td colspan="3" class="empty-state">No inventory</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DATA STORE ============
+        let store = {
+            projects: [],
+            inventory: [],
+            lastQuote: null
+        };
+
+        // Load from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('studentStore');
+            if (saved) {
+                store = JSON.parse(saved);
+            }
+            updateUI();
+        }
+
+        // Save to localStorage
+        function saveData() {
+            localStorage.setItem('studentStore', JSON.stringify(store));
+            updateUI();
+        }
+
+        // ============ NAVIGATION ============
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
+        }
+
+        document.querySelectorAll('nav button').forEach(btn => {
+            btn.addEventListener('click', () => switchView(btn.dataset.view));
+        });
+
+        // ============ CALCULATORS ============
+        function calculateCNC() {
+            const length = parseFloat(document.getElementById('cnc-length').value) || 0;
+            const width = parseFloat(document.getElementById('cnc-width').value) || 0;
+            const hours = parseFloat(document.getElementById('cnc-hours').value) || 0;
+
+            // Formula: (L × W × $0.05) × 1.5 waste factor + ($3.60 × cut hours)
+            const materialCost = length * width * 0.05 * 1.5;
+            const machineCost = 3.60 * hours;
+            const totalCost = materialCost + machineCost;
+
+            // Markup for selling price (cost × 2 is common retail markup)
+            const sellPrice = Math.ceil(totalCost * 2);
+            const profit = sellPrice - totalCost;
+            const studentShare = profit * 0.5;
+
+            document.getElementById('cnc-result').style.display = 'block';
+            document.getElementById('cnc-price').textContent = `$${sellPrice.toFixed(2)}`;
+            document.getElementById('cnc-breakdown').textContent =
+                `Material: $${materialCost.toFixed(2)} | Machine: $${machineCost.toFixed(2)} | Cost: $${totalCost.toFixed(2)}`;
+            document.getElementById('cnc-profit').textContent =
+                `Profit: $${profit.toFixed(2)} → Student: $${studentShare.toFixed(2)}`;
+
+            store.lastQuote = {
+                type: 'CNC Plasma',
+                price: sellPrice,
+                cost: totalCost,
+                profit: profit,
+                studentShare: studentShare
+            };
+        }
+
+        function calculate3D() {
+            const grams = parseFloat(document.getElementById('print-grams').value) || 0;
+            const hours = parseFloat(document.getElementById('print-hours').value) || 0;
+
+            // Formula: (grams × $0.04) + (hours × $0.10) + $3 setup
+            const filamentCost = grams * 0.04;
+            const machineCost = hours * 0.10;
+            const setupCost = 3.00;
+            const totalCost = filamentCost + machineCost + setupCost;
+
+            // Markup for selling price
+            const sellPrice = Math.ceil(totalCost * 2);
+            const profit = sellPrice - totalCost;
+            const studentShare = profit * 0.5;
+
+            document.getElementById('print-result').style.display = 'block';
+            document.getElementById('print-price').textContent = `$${sellPrice.toFixed(2)}`;
+            document.getElementById('print-breakdown').textContent =
+                `Filament: $${filamentCost.toFixed(2)} | Machine: $${machineCost.toFixed(2)} | Setup: $${setupCost.toFixed(2)} | Cost: $${totalCost.toFixed(2)}`;
+            document.getElementById('print-profit').textContent =
+                `Profit: $${profit.toFixed(2)} → Student: $${studentShare.toFixed(2)}`;
+
+            store.lastQuote = {
+                type: '3D Print',
+                price: sellPrice,
+                cost: totalCost,
+                profit: profit,
+                studentShare: studentShare
+            };
+        }
+
+        // ============ PROJECTS ============
+        function saveProject() {
+            if (!store.lastQuote) {
+                alert('Calculate a quote first');
+                return;
+            }
+
+            const student = document.getElementById('quote-student').value.trim();
+            const customer = document.getElementById('quote-customer').value.trim();
+            const desc = document.getElementById('quote-desc').value.trim();
+
+            if (!student || !customer) {
+                alert('Enter student and customer names');
+                return;
+            }
+
+            const project = {
+                id: Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                student: student,
+                customer: customer,
+                description: desc,
+                ...store.lastQuote,
+                status: 'pending',
+                paid: false
+            };
+
+            store.projects.push(project);
+            saveData();
+
+            // Clear form
+            document.getElementById('quote-student').value = '';
+            document.getElementById('quote-customer').value = '';
+            document.getElementById('quote-desc').value = '';
+            store.lastQuote = null;
+
+            alert('Project saved!');
+            switchView('projects');
+        }
+
+        function updateProjectStatus(id, status) {
+            const project = store.projects.find(p => p.id === id);
+            if (project) {
+                project.status = status;
+                saveData();
+            }
+        }
+
+        function markPaid(id) {
+            const project = store.projects.find(p => p.id === id);
+            if (project) {
+                project.paid = true;
+                saveData();
+            }
+        }
+
+        function deleteProject(id) {
+            if (confirm('Delete this project?')) {
+                store.projects = store.projects.filter(p => p.id !== id);
+                saveData();
+            }
+        }
+
+        // ============ INVENTORY ============
+        function addInventory() {
+            const type = document.getElementById('inv-type').value;
+            const qty = parseInt(document.getElementById('inv-qty').value) || 0;
+            const cost = parseFloat(document.getElementById('inv-cost').value) || 0;
+
+            if (qty <= 0) return;
+
+            const existing = store.inventory.find(i => i.type === type);
+            if (existing) {
+                existing.qty += qty;
+                existing.totalValue += qty * cost;
+            } else {
+                store.inventory.push({
+                    type: type,
+                    qty: qty,
+                    totalValue: qty * cost
+                });
+            }
+
+            saveData();
+            document.getElementById('inv-qty').value = '';
+            document.getElementById('inv-cost').value = '';
+        }
+
+        // ============ EXPORT ============
+        function exportData() {
+            if (store.projects.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            const headers = ['Date', 'Student', 'Customer', 'Type', 'Price', 'Cost', 'Profit', 'Student Share', 'Status', 'Paid'];
+            const rows = store.projects.map(p => [
+                p.date,
+                p.student,
+                p.customer,
+                p.type,
+                p.price.toFixed(2),
+                p.cost.toFixed(2),
+                p.profit.toFixed(2),
+                p.studentShare.toFixed(2),
+                p.status,
+                p.paid ? 'Yes' : 'No'
+            ]);
+
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `student-store-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // ============ UI UPDATE ============
+        function updateUI() {
+            // Dashboard stats
+            const activeProjects = store.projects.filter(p => p.status !== 'sold').length;
+            const totalRevenue = store.projects.filter(p => p.status === 'sold').reduce((sum, p) => sum + p.price, 0);
+            const totalStudentShare = store.projects.filter(p => p.status === 'sold').reduce((sum, p) => sum + p.studentShare, 0);
+            const pendingPayout = store.projects.filter(p => p.status === 'sold' && !p.paid).reduce((sum, p) => sum + p.studentShare, 0);
+
+            document.getElementById('stat-projects').textContent = activeProjects;
+            document.getElementById('stat-revenue').textContent = `$${totalRevenue.toFixed(0)}`;
+            document.getElementById('stat-student-share').textContent = `$${totalStudentShare.toFixed(0)}`;
+            document.getElementById('stat-pending').textContent = `$${pendingPayout.toFixed(0)}`;
+
+            // Projects table
+            const projectsBody = document.getElementById('projects-table');
+            if (store.projects.length === 0) {
+                projectsBody.innerHTML = '<tr><td colspan="8" class="empty-state">No projects yet</td></tr>';
+            } else {
+                projectsBody.innerHTML = store.projects.map(p => `
+                    <tr>
+                        <td>${p.date}</td>
+                        <td><strong>${p.student}</strong></td>
+                        <td>${p.customer}</td>
+                        <td>${p.type}</td>
+                        <td>$${p.price.toFixed(2)}</td>
+                        <td class="profit">$${p.studentShare.toFixed(2)}</td>
+                        <td>
+                            <select onchange="updateProjectStatus(${p.id}, this.value)">
+                                <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="complete" ${p.status === 'complete' ? 'selected' : ''}>Complete</option>
+                                <option value="sold" ${p.status === 'sold' ? 'selected' : ''}>Sold</option>
+                            </select>
+                        </td>
+                        <td>
+                            ${p.status === 'sold' && !p.paid ?
+                                `<button class="btn btn-success" style="padding:0.25rem 0.5rem;font-size:0.75rem" onclick="markPaid(${p.id})">Pay</button>` :
+                                p.paid ? '<span class="badge badge-paid">Paid</span>' : ''}
+                            <button class="btn btn-outline" style="padding:0.25rem 0.5rem;font-size:0.75rem" onclick="deleteProject(${p.id})">×</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Earnings table
+            const earningsBody = document.getElementById('earnings-table');
+            const studentEarnings = {};
+            store.projects.forEach(p => {
+                if (!studentEarnings[p.student]) {
+                    studentEarnings[p.student] = { completed: 0, earned: 0, paid: 0 };
+                }
+                if (p.status === 'sold') {
+                    studentEarnings[p.student].completed++;
+                    studentEarnings[p.student].earned += p.studentShare;
+                    if (p.paid) studentEarnings[p.student].paid += p.studentShare;
+                }
+            });
+
+            const studentList = Object.entries(studentEarnings);
+            if (studentList.length === 0) {
+                earningsBody.innerHTML = '<tr><td colspan="5" class="empty-state">No earnings data</td></tr>';
+            } else {
+                earningsBody.innerHTML = studentList.map(([name, data]) => `
+                    <tr>
+                        <td><strong>${name}</strong></td>
+                        <td>${data.completed}</td>
+                        <td>$${data.earned.toFixed(2)}</td>
+                        <td>$${data.paid.toFixed(2)}</td>
+                        <td class="profit">$${(data.earned - data.paid).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Inventory table
+            const invBody = document.getElementById('inventory-table');
+            if (store.inventory.length === 0) {
+                invBody.innerHTML = '<tr><td colspan="3" class="empty-state">No inventory</td></tr>';
+            } else {
+                invBody.innerHTML = store.inventory.map(i => `
+                    <tr>
+                        <td>${i.type}</td>
+                        <td>${i.qty}</td>
+                        <td>$${i.totalValue.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Recent activity
+            const recentDiv = document.getElementById('recent-activity');
+            const recent = store.projects.slice(-3).reverse();
+            if (recent.length === 0) {
+                recentDiv.innerHTML = '<div class="empty-state">No recent activity</div>';
+            } else {
+                recentDiv.innerHTML = recent.map(p =>
+                    `<div style="padding:0.5rem 0;border-bottom:1px solid var(--border)">
+                        <strong>${p.student}</strong> - ${p.type} for ${p.customer}
+                        <span class="badge badge-${p.status}">${p.status}</span>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
+
