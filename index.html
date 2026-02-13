@@ -292,6 +292,142 @@
   }
   .specs-bar.light .spec-item .label { color: var(--steel); }
 
+  /* ── OPTIMIZE SECTION ── */
+  --amber: #B8860B;
+  --amber-glow: #D4A017;
+  --amber-bg: #FFF8E0;
+
+  /* ── DIAGNOSTIC GRID (3-col: slow / good / fast) ── */
+  .diagnostic-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem; margin: 0.75rem 0;
+  }
+  .diagnostic-box {
+    border-radius: var(--radius); padding: 1rem;
+  }
+  .diagnostic-box h4 {
+    font-family: 'Oswald', sans-serif; font-size: 0.9rem;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .diagnostic-box ul { list-style: none; padding: 0; font-size: 0.85rem; }
+  .diagnostic-box li { padding: 3px 0 3px 16px; position: relative; }
+  .diagnostic-box li::before {
+    content: ''; position: absolute; left: 0; top: 11px;
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .diag-slow { background: var(--yellow-bg); border: 2px solid var(--yellow-border); }
+  .diag-slow h4 { color: #9A7B00; }
+  .diag-slow li::before { background: var(--yellow); }
+  .diag-good { background: var(--green-bg); border: 2px solid #A0D8B0; }
+  .diag-good h4 { color: var(--green); }
+  .diag-good li::before { background: var(--green); }
+  .diag-fast { background: var(--red-bg); border: 2px solid #E8A0A0; }
+  .diag-fast h4 { color: var(--red); }
+  .diag-fast li::before { background: var(--red); }
+
+  /* ── DROSS-FREE ZONE BAR ── */
+  .dfz-bar {
+    display: flex; border-radius: var(--radius); overflow: hidden;
+    margin: 1rem 0; font-size: 0.82rem; text-align: center;
+    border: 1.5px solid var(--border);
+  }
+  .dfz-zone { padding: 0.75rem 0.5rem; flex: 1; }
+  .dfz-zone-slow {
+    background: var(--yellow-bg); flex: 1.2;
+    border-right: 2px dashed var(--yellow-border);
+  }
+  .dfz-zone-sweet {
+    background: var(--green-bg); flex: 1;
+    border-right: 2px dashed #A0D8B0;
+  }
+  .dfz-zone-fast { background: var(--red-bg); flex: 1.2; }
+  .dfz-label {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    text-transform: uppercase; font-size: 0.8rem; margin-bottom: 2px;
+  }
+  .dfz-zone-slow .dfz-label { color: #9A7B00; }
+  .dfz-zone-sweet .dfz-label { color: var(--green); }
+  .dfz-zone-fast .dfz-label { color: var(--red); }
+  .dfz-desc { font-size: 0.75rem; color: var(--steel); }
+
+  /* ── CONSUMABLE STACK (5 items) ── */
+  .stack-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem; margin: 0.75rem 0;
+  }
+  .stack-card {
+    text-align: center; padding: 0.6rem 0.4rem;
+    border-radius: var(--radius); background: var(--white);
+    border: 1.5px solid var(--border);
+  }
+  .stack-card .part-icon { font-size: 1.3rem; margin-bottom: 2px; }
+  .stack-card .part-name {
+    font-weight: 700; font-size: 0.78rem; color: var(--dark); margin-bottom: 2px;
+  }
+  .stack-card .part-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: var(--fire); background: var(--fire-bg);
+    padding: 1px 4px; border-radius: 3px; display: inline-block;
+  }
+  .stack-card .part-detail { font-size: 0.68rem; color: var(--steel); margin-top: 2px; }
+
+  /* ── MATERIAL CARDS ── */
+  .material-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem; margin: 0.75rem 0;
+  }
+  .material-card {
+    border-radius: var(--radius); padding: 0.75rem;
+    text-align: center; background: var(--white);
+    border: 1.5px solid var(--border); position: relative;
+  }
+  .material-card .gauge-label {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 1.3rem; color: var(--dark);
+  }
+  .material-card .thickness {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+    color: var(--fire); margin-bottom: 4px;
+  }
+  .material-card .param-row {
+    font-size: 0.72rem; color: var(--steel); padding: 2px 0;
+    border-top: 1px solid #EEEEF2;
+  }
+  .material-card .param-row strong { color: var(--dark); }
+  .material-card.active {
+    border-color: var(--fire); box-shadow: 0 2px 8px rgba(232,96,10,0.15);
+  }
+
+  /* ── THC SEQUENCE ── */
+  .thc-sequence {
+    display: flex; align-items: stretch; justify-content: center;
+    gap: 0; margin: 1rem 0; overflow-x: auto;
+  }
+  .thc-step {
+    text-align: center; padding: 0.6rem 0.6rem;
+    flex: 1; min-width: 110px; position: relative;
+  }
+  .thc-step .thc-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 0.7rem; color: var(--white); margin-bottom: 4px;
+    background: var(--charcoal);
+  }
+  .thc-step .thc-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.78rem;
+    font-weight: 700; text-transform: uppercase; color: var(--dark);
+  }
+  .thc-step .thc-detail {
+    font-size: 0.7rem; color: var(--steel); margin-top: 2px;
+  }
+  .thc-step .thc-detail code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    background: var(--fire-bg); color: var(--fire);
+    padding: 1px 3px; border-radius: 3px;
+  }
+  .thc-arrow { color: var(--border); font-size: 1rem; display: flex; align-items: center; padding: 0 2px; font-weight: 700; }
+
   /* ── ISLAND DIAGRAM ── */
   .island-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
   .island-box { border-radius: var(--radius); padding: 1rem; text-align: center; }
@@ -345,8 +481,15 @@
   @media (max-width: 768px) {
     .hero { padding: 2rem 1rem; }
     .container { padding: 1rem; }
-    .two-col, .compare-grid, .island-grid { grid-template-columns: 1fr; }
-    .consumable-grid { grid-template-columns: 1fr 1fr; }
+    .two-col, .compare-grid, .island-grid, .diagnostic-grid { grid-template-columns: 1fr; }
+    .consumable-grid, .stack-grid { grid-template-columns: 1fr 1fr; }
+    .material-grid { grid-template-columns: 1fr 1fr; }
+    .dfz-bar { flex-direction: column; }
+    .dfz-zone-slow, .dfz-zone-sweet, .dfz-zone-fast {
+      border-right: none; border-bottom: 2px dashed var(--border);
+    }
+    .dfz-zone-fast { border-bottom: none; }
+    .thc-sequence { flex-wrap: wrap; }
     .specs-bar { flex-direction: column; align-items: center; }
     .section-header { flex-wrap: wrap; }
     .section-tag { margin-left: 0; }
@@ -359,8 +502,11 @@
     .hero { padding: 1rem; }
     body { font-size: 10pt; background: white; }
     .container { padding: 0.5rem; }
-    .card, .photo-card { break-inside: avoid; }
+    .card, .photo-card, .diagnostic-grid, .material-grid, .stack-grid { break-inside: avoid; }
     .section-header { break-after: avoid; }
+    .dfz-bar { break-inside: avoid; }
+    .thc-sequence { break-inside: avoid; }
+    .specs-bar { break-inside: avoid; }
   }
 </style>
 </head>
@@ -399,6 +545,8 @@
     <a href="#sheetcam" class="nav-step"><div class="nav-num" style="background:var(--fire);">4</div>SheetCam</a>
     <span class="nav-arrow">&rarr;</span>
     <a href="#cut" class="nav-step"><div class="nav-num" style="background:var(--red);">5</div>Cut</a>
+    <span class="nav-arrow">&rarr;</span>
+    <a href="#optimize" class="nav-step"><div class="nav-num" style="background:var(--amber);">6</div>Optimize</a>
     <span class="nav-arrow">&rarr;</span>
     <a href="#troubleshoot" class="nav-step"><div class="nav-num" style="background:#7c3aed;">T</div>Fix</a>
   </div>
@@ -884,6 +1032,573 @@
   </div>
 
   <!-- ════════════════════════════════════════════ -->
+  <!-- SECTION 6: OPTIMIZE                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="optimize">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--amber);">6</div>
+      <h2>Optimize: Cut Parameters &amp; Quality Mastery
+        <small>Dial in THC, amperage, feed rates, and material prep for the Hypertherm PowerMax 65.</small>
+      </h2>
+      <span class="section-tag">Powermax 65</span>
+    </div>
+
+    <div class="callout callout-fire" style="margin-top:0;">
+      <span class="callout-icon">&#9889;</span>
+      <div><strong>Why this matters:</strong> The difference between a clean part and a dross-covered mess comes down to <strong>three variables</strong> &mdash; torch height, feed rate, and amperage. Learn what each one does, and you can diagnose any cut problem on sight.</div>
+    </div>
+
+    <!-- ── POWERMAX 65 SPECS ── -->
+    <div class="specs-bar">
+      <div class="spec-item"><div class="value">20 &ndash; 65A</div><div class="label">Output Range</div></div>
+      <div class="spec-item"><div class="value">3/4" @ 20 IPM</div><div class="label">Recommended Cut</div></div>
+      <div class="spec-item"><div class="value">1" @ 10 IPM</div><div class="label">Max Severance</div></div>
+      <div class="spec-item"><div class="value">50% @ 65A</div><div class="label">Duty Cycle</div></div>
+      <div class="spec-item"><div class="value">75 &ndash; 120 PSI</div><div class="label">Air Supply</div></div>
+    </div>
+
+    <!-- ── CONSUMABLE STRATEGY ── -->
+    <div class="card card-accent">
+      <h3>Consumable Selection: Match the Tip to the Thickness</h3>
+      <p>The PowerMax 65 runs <strong>two consumable sets</strong>. Choosing the right one is the <em>single biggest factor</em> in cut quality on thin gauge steel.</p>
+      <div class="compare-grid">
+        <div class="compare-box dxf" style="background:var(--blue-bg); border-color:#B3D4F7;">
+          <h4 style="color:var(--blue);">45A FineCut Consumables</h4>
+          <ul>
+            <li><strong>Use for:</strong> 16 GA, 14 GA, and 12 GA</li>
+            <li>Smaller, more constricted arc</li>
+            <li>Narrower kerf (0.043&ndash;0.050")</li>
+            <li>Less heat input = less warping on thin stock</li>
+            <li>Longer consumable life on thin gauge</li>
+          </ul>
+        </div>
+        <div class="compare-box svg" style="background:var(--fire-bg); border-color:#F5C6A0;">
+          <h4 style="color:var(--fire);">65A Shielded Consumables</h4>
+          <ul>
+            <li><strong>Use for:</strong> 12 GA (heavy cuts), 3/16", 1/4", 3/8"</li>
+            <li>Full power arc for thick material</li>
+            <li>Wider kerf (0.070&ndash;0.088")</li>
+            <li>Required for reliable pierce on 1/4"+</li>
+            <li>Best edge squareness on plate steel</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout callout-green">
+        <span class="callout-icon">&#9989;</span>
+        <div><strong>Rule of thumb:</strong> Use the <strong>lowest amperage consumable</strong> that can still pierce your material. This gives the best edge quality, smallest kerf, and longest consumable life.</div>
+      </div>
+    </div>
+
+    <!-- ── MASTER CUT CHART ── -->
+    <div class="card">
+      <h3>Master Cut Chart &mdash; Hypertherm PowerMax 65, Mild Steel, Air</h3>
+      <p>These are your starting-point settings. Run test cuts and fine-tune from here.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Consumables</th>
+            <th>Amps</th>
+            <th>Feed Rate</th>
+            <th>Arc Voltage</th>
+            <th>Pierce Delay</th>
+            <th>Kerf Width</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>16 GA</strong><br><span style="font-size:0.78rem; color:var(--steel);">0.060"</span></td>
+            <td>45A FineCut</td>
+            <td><code>30&ndash;45A</code></td>
+            <td><code>200&ndash;275 IPM</code></td>
+            <td><code>108&ndash;130 V</code></td>
+            <td><code>0.0&ndash;0.2s</code></td>
+            <td><code>~0.043"</code></td>
+          </tr>
+          <tr>
+            <td><strong>14 GA</strong><br><span style="font-size:0.78rem; color:var(--steel);">0.075"</span></td>
+            <td>45A FineCut</td>
+            <td><code>30&ndash;45A</code></td>
+            <td><code>160&ndash;200 IPM</code></td>
+            <td><code>115&ndash;130 V</code></td>
+            <td><code>0.3&ndash;0.5s</code></td>
+            <td><code>~0.050"</code></td>
+          </tr>
+          <tr>
+            <td><strong>12 GA</strong><br><span style="font-size:0.78rem; color:var(--steel);">0.105"</span></td>
+            <td>65A Shielded</td>
+            <td><code>65A</code></td>
+            <td><code>150&ndash;200 IPM</code></td>
+            <td><code>130&ndash;138 V</code></td>
+            <td><code>0.4&ndash;0.5s</code></td>
+            <td><code>~0.070"</code></td>
+          </tr>
+          <tr style="background:var(--fire-bg);">
+            <td><strong>1/4"</strong><br><span style="font-size:0.78rem; color:var(--steel);">0.250"</span></td>
+            <td>65A Shielded</td>
+            <td><code>65A</code></td>
+            <td><code>75&ndash;120 IPM</code></td>
+            <td><code>138&ndash;142 V</code></td>
+            <td><code>0.7&ndash;1.0s</code></td>
+            <td><code>~0.088"</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-blue">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Cut height:</strong> <code>0.060"</code> for all gauges up to 1/4". <strong>Pierce height:</strong> <code>0.150"</code> for all gauges (1.5&ndash;2&times; cut height). These two values rarely change &mdash; feed rate and pierce delay are what you adjust per material.</div>
+      </div>
+    </div>
+
+    <!-- ── MATERIAL QUICK CARDS ── -->
+    <div class="material-grid">
+      <div class="material-card">
+        <div class="gauge-label">16 GA</div>
+        <div class="thickness">0.060"</div>
+        <div class="param-row"><strong>200&ndash;275</strong> IPM</div>
+        <div class="param-row">45A FineCut</div>
+        <div class="param-row">Pierce <strong>0.0&ndash;0.2s</strong></div>
+        <div class="param-row">Kerf <strong>0.043"</strong></div>
+      </div>
+      <div class="material-card">
+        <div class="gauge-label">14 GA</div>
+        <div class="thickness">0.075"</div>
+        <div class="param-row"><strong>160&ndash;200</strong> IPM</div>
+        <div class="param-row">45A FineCut</div>
+        <div class="param-row">Pierce <strong>0.3&ndash;0.5s</strong></div>
+        <div class="param-row">Kerf <strong>0.050"</strong></div>
+      </div>
+      <div class="material-card">
+        <div class="gauge-label">12 GA</div>
+        <div class="thickness">0.105"</div>
+        <div class="param-row"><strong>150&ndash;200</strong> IPM</div>
+        <div class="param-row">65A Shielded</div>
+        <div class="param-row">Pierce <strong>0.4&ndash;0.5s</strong></div>
+        <div class="param-row">Kerf <strong>0.070"</strong></div>
+      </div>
+      <div class="material-card active">
+        <div class="gauge-label">1/4"</div>
+        <div class="thickness">0.250"</div>
+        <div class="param-row"><strong>75&ndash;120</strong> IPM</div>
+        <div class="param-row">65A Shielded</div>
+        <div class="param-row">Pierce <strong>0.7&ndash;1.0s</strong></div>
+        <div class="param-row">Kerf <strong>0.088"</strong></div>
+      </div>
+    </div>
+
+    <!-- ── READING YOUR CUT: DROSS-FREE ZONE ── -->
+    <div class="card">
+      <h3>Reading Your Cut &mdash; The Dross-Free Zone</h3>
+      <p>For every thickness there is a narrow speed range where the cut comes out clean with no dross. Below that range you get low-speed dross; above it, high-speed dross. Your goal is to find and stay inside this <strong>dross-free zone (DFZ)</strong>.</p>
+
+      <div class="dfz-bar">
+        <div class="dfz-zone dfz-zone-slow">
+          <div class="dfz-label">&#9664; Too Slow</div>
+          <div class="dfz-desc">Soft, bubbly dross. Easy to knock off. Excess heat, warping.</div>
+        </div>
+        <div class="dfz-zone dfz-zone-sweet">
+          <div class="dfz-label">&#9733; Dross-Free Zone</div>
+          <div class="dfz-desc">Clean edges. Vertical drag lines. Minimal bevel.</div>
+        </div>
+        <div class="dfz-zone dfz-zone-fast">
+          <div class="dfz-label">Too Fast &#9654;</div>
+          <div class="dfz-desc">Hard, tenacious dross. Arc lags behind. May not penetrate.</div>
+        </div>
+      </div>
+
+      <div class="diagnostic-grid">
+        <div class="diagnostic-box diag-slow">
+          <h4>&#128543; Too Slow</h4>
+          <ul>
+            <li>Soft, large dross globules on bottom edge</li>
+            <li>Arc rushes <em>ahead</em> of the torch</li>
+            <li>Kerf wider than expected</li>
+            <li>Excessive heat-affected zone</li>
+            <li>Thin material warps and buckles</li>
+            <li>Negative bevel (wider at bottom)</li>
+          </ul>
+        </div>
+        <div class="diagnostic-box diag-good">
+          <h4>&#9989; Just Right</h4>
+          <ul>
+            <li>Minimal or zero dross on bottom edge</li>
+            <li>Arc exits <em>vertically</em> from plate</li>
+            <li>Smooth, parallel drag lines on cut face</li>
+            <li>Consistent kerf width</li>
+            <li>Near-zero bevel on cut edge</li>
+            <li>Clean bottom edge, no cleanup needed</li>
+          </ul>
+        </div>
+        <div class="diagnostic-box diag-fast">
+          <h4>&#128544; Too Fast</h4>
+          <ul>
+            <li>Hard, fine dross beads &mdash; difficult to remove</li>
+            <li>Arc visibly <em>lags behind</em> the cut</li>
+            <li>"Rooster tail" of sparks trailing behind</li>
+            <li>Top spatter / uncut dross</li>
+            <li>Failure to fully penetrate</li>
+            <li>Positive bevel (wider at top)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-yellow">
+        <span class="callout-icon">&#128270;</span>
+        <div><strong>Best-quality speeds</strong> are roughly <strong>80%</strong> of maximum production speeds listed in Hypertherm charts. Slow down slightly from the max and you hit the sweet spot for edge quality. Low-speed dross in <em>corners</em> is normal &mdash; the machine decelerates through turns.</div>
+      </div>
+    </div>
+
+    <!-- ── THC DEEP DIVE ── -->
+    <div class="card">
+      <h3>Torch Height Control &mdash; How Voltage Tracking Works</h3>
+      <p>The PowerMax 65 is a <strong>constant-current</strong> power supply. Amperage stays fixed at whatever you set. The <strong>arc voltage</strong> changes proportionally with the distance between the torch and the plate. THC exploits this relationship to maintain perfect standoff in real time.</p>
+
+      <div class="card card-blue" style="margin:1rem 0;">
+        <p style="text-align:center; font-size:0.92rem;">
+          <strong>Torch farther from plate &rarr;</strong> arc stretches &rarr; <strong>voltage rises</strong><br>
+          <strong>Torch closer to plate &rarr;</strong> arc compresses &rarr; <strong>voltage drops</strong>
+        </p>
+      </div>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:1rem 0 0.5rem;">THC Operating Sequence</h4>
+      <div class="thc-sequence">
+        <div class="thc-step">
+          <div class="thc-num">1</div>
+          <div class="thc-label">IHS Probe</div>
+          <div class="thc-detail">Torch descends until it senses the plate surface</div>
+        </div>
+        <span class="thc-arrow">&rarr;</span>
+        <div class="thc-step">
+          <div class="thc-num">2</div>
+          <div class="thc-label">Pierce Height</div>
+          <div class="thc-detail">Retracts to <code>0.150"</code> above plate</div>
+        </div>
+        <span class="thc-arrow">&rarr;</span>
+        <div class="thc-step">
+          <div class="thc-num">3</div>
+          <div class="thc-label">Arc Fire</div>
+          <div class="thc-detail">Pierce delay lets arc burn through</div>
+        </div>
+        <span class="thc-arrow">&rarr;</span>
+        <div class="thc-step">
+          <div class="thc-num">4</div>
+          <div class="thc-label">Cut Height</div>
+          <div class="thc-detail">Descends to <code>0.060"</code> standoff</div>
+        </div>
+        <span class="thc-arrow">&rarr;</span>
+        <div class="thc-step" style="background:var(--fire-bg); border-radius:var(--radius);">
+          <div class="thc-num" style="background:var(--fire);">5</div>
+          <div class="thc-label">Voltage Lock</div>
+          <div class="thc-detail">THC samples voltage &amp; adjusts Z continuously</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:1rem 0 0.5rem;">Target Arc Voltage by Thickness</h4>
+      <table>
+        <thead><tr><th>Thickness</th><th>Consumables</th><th>Arc Voltage</th><th>What It Controls</th></tr></thead>
+        <tbody>
+          <tr><td><strong>16 GA</strong> (0.060")</td><td>45A FineCut</td><td><code>108&ndash;130 V</code></td><td rowspan="4" style="font-size:0.85rem;">Higher voltage = torch rides higher.<br>Lower voltage = torch rides lower.<br><br>Set the target voltage from the cut chart, then THC maintains that standoff by adjusting Z in real-time.</td></tr>
+          <tr><td><strong>14 GA</strong> (0.075")</td><td>45A FineCut</td><td><code>115&ndash;130 V</code></td></tr>
+          <tr><td><strong>12 GA</strong> (0.105")</td><td>65A Shielded</td><td><code>130&ndash;138 V</code></td></tr>
+          <tr><td><strong>1/4"</strong> (0.250")</td><td>65A Shielded</td><td><code>138&ndash;142 V</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ANTI-DIVE -->
+    <div class="card card-red" style="border-left-color:var(--red);">
+      <h3 style="color:var(--red);">&#9888; Anti-Dive: Protect Against THC Overcorrection</h3>
+      <p>On tight corners and small holes, the CNC table <strong>decelerates</strong>. The slower feed rate overheats the kerf, causing arc voltage to spike. THC misreads this as "torch too high" and <strong>drives the torch down into the plate</strong> &mdash; destroying the nozzle.</p>
+      <div class="two-col" style="margin-top:0.75rem;">
+        <div>
+          <h4 style="font-family:'Oswald',sans-serif; font-size:0.9rem; text-transform:uppercase; margin-bottom:0.4rem;">Velocity Anti-Dive Threshold</h4>
+          <p style="font-size:0.88rem;">When XY speed drops below <strong>60&ndash;85%</strong> of programmed feed rate, THC motion freezes. This prevents overcorrection on corners and small features. Set this in your CNC controller.</p>
+        </div>
+        <div>
+          <h4 style="font-family:'Oswald',sans-serif; font-size:0.9rem; text-transform:uppercase; margin-bottom:0.4rem;">Small Hole Rule</h4>
+          <p style="font-size:0.88rem;">For holes smaller than <strong>~1.25" diameter</strong>, lock out THC entirely during the cut. Arc voltage feedback is unreliable on tight radius paths. SheetCam can disable THC per operation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PIERCE & LEAD-IN STRATEGY ── -->
+    <div class="card">
+      <h3>Pierce &amp; Lead-In Strategy</h3>
+      <p><strong>Pierce delay</strong> is the pause after the arc fires before XY motion begins. The arc must fully penetrate the material before the torch starts moving.</p>
+      <table>
+        <thead><tr><th>Thickness</th><th>Pierce Delay</th><th>Signs Too Short</th><th>Signs Too Long</th></tr></thead>
+        <tbody>
+          <tr><td><strong>16 GA</strong></td><td><code>0.0&ndash;0.2s</code></td><td rowspan="4" style="font-size:0.85rem;">Arc hasn't penetrated &rarr; incomplete initial cut, possible arc loss</td><td rowspan="4" style="font-size:0.85rem;">Pierce hole much wider than kerf &rarr; material warps around pierce point, excessive spatter</td></tr>
+          <tr><td><strong>14 GA</strong></td><td><code>0.3&ndash;0.5s</code></td></tr>
+          <tr><td><strong>12 GA</strong></td><td><code>0.4&ndash;0.5s</code></td></tr>
+          <tr><td><strong>1/4"</strong></td><td><code>0.7&ndash;1.0s</code></td></tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:1rem 0 0.5rem;">Lead-In Types</h4>
+      <div class="diagnostic-grid">
+        <div class="diagnostic-box" style="background:var(--blue-bg); border:2px solid #B3D4F7;">
+          <h4 style="color:var(--blue);">Straight Lead-In</h4>
+          <ul style="font-size:0.82rem;">
+            <li>Simplest and most common</li>
+            <li>Best for machines with good acceleration</li>
+            <li>Works well for exterior contours</li>
+            <li>Length: <strong>2&ndash;4&times;</strong> kerf width</li>
+          </ul>
+        </div>
+        <div class="diagnostic-box" style="background:var(--green-bg); border:2px solid #A0D8B0;">
+          <h4 style="color:var(--green);">Arc (Radius) Lead-In</h4>
+          <ul style="font-size:0.82rem;">
+            <li>Smoother entry onto cut path</li>
+            <li>Better for machines with slower acceleration</li>
+            <li>Our default: <strong>0.125" radius</strong></li>
+            <li>Prevents nib at entry point</li>
+          </ul>
+        </div>
+        <div class="diagnostic-box" style="background:var(--fire-bg); border:2px solid #F5C6A0;">
+          <h4 style="color:var(--fire);">Spiral Lead-In</h4>
+          <ul style="font-size:0.82rem;">
+            <li>Specialized for <strong>hole cutting</strong></li>
+            <li>Torch reaches full speed before the hole perimeter</li>
+            <li>Arc stabilizes on the approach</li>
+            <li>Best for holes &lt; 2" diameter</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-red">
+        <span class="callout-icon">&#9940;</span>
+        <div><strong>Lead-out on holes:</strong> Do NOT lead out into the center slug of a hole. Instead, use a short <strong>overburn</strong> of 0.150&ndash;0.200" past the lead-in intersection, then extinguish the arc. Leading into the slug hammers your nozzle and electrode.</div>
+      </div>
+
+      <div class="callout callout-fire">
+        <span class="callout-icon">&#11044;</span>
+        <div><strong>Hole cutting rules:</strong> Minimum hole diameter = plate thickness (1:1 ratio). Use lower power and speed for best edge quality. Lock out THC on holes under 1.25" diameter. Ensure the torch transitions from pierce height to cut height <em>while still on the lead-in</em>, not on the hole perimeter.</div>
+      </div>
+    </div>
+
+    <!-- ── FILE TYPES & WORKFLOW ── -->
+    <div class="card">
+      <h3>File Types &amp; the Design-to-Cut Pipeline</h3>
+      <p>Understanding what each file format does and where it fits in the workflow prevents scale errors, geometry corruption, and wasted material.</p>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:0.75rem 0 0.5rem;">Design Files (Input to SheetCam)</h4>
+      <table>
+        <thead><tr><th>Format</th><th>Extension</th><th>Best For</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>DXF</strong></td><td><code>.dxf</code></td><td>Engineering parts, brackets, dimensional work</td><td>Save as <strong>R12/R14 ASCII</strong> for widest compatibility. True arcs = cleanest geometry.</td></tr>
+          <tr><td><strong>SVG</strong></td><td><code>.svg</code></td><td>Signs, logos, metal art, decorative work</td><td>Imports at 1:1 scale. Fewer nodes = smoother toolpaths.</td></tr>
+          <tr><td><strong>AI</strong></td><td><code>.ai</code></td><td>Professional graphics (must export to SVG)</td><td><strong>Never export DXF from Illustrator</strong> &mdash; arcs fragment into tiny segments.</td></tr>
+          <tr><td><strong>DWG</strong></td><td><code>.dwg</code></td><td>AutoCAD native drawings</td><td>Supported by some CAM software directly.</td></tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:0.75rem 0 0.5rem;">Toolpath Files (Output from SheetCam)</h4>
+      <table>
+        <thead><tr><th>Format</th><th>Extension</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TAP</strong></td><td><code>.tap</code></td><td>G-code variant used by SheetCam + CommandCNC. <strong>Our primary output format.</strong></td></tr>
+          <tr><td><strong>G-code</strong></td><td><code>.ngc</code> / <code>.nc</code></td><td>Standard CNC machine language. Contains coordinates, feed rates, and torch commands.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">&#128218;</span>
+        <div><strong>Key rule:</strong> Never hard-code kerf compensation in your design file. Draw parts at <strong>exact final size</strong>. Kerf offsets are applied in SheetCam during the CAM step. Double-compensating is the most common sizing error.</div>
+      </div>
+    </div>
+
+    <!-- ── CONSUMABLES: THE POWERMAX 65 STACK ── -->
+    <div class="card">
+      <h3>Consumables &mdash; The PowerMax 65 Stack</h3>
+      <p>Five parts assemble into the Duramax torch. Inspect all five before every cutting session.</p>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:0.5rem 0 0.5rem;">65A Shielded Set (Thick Gauge / Plate)</h4>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="part-icon">&#11042;</div>
+          <div class="part-name">Electrode</div>
+          <div class="part-num">220842</div>
+          <div class="part-detail">Hafnium emitter sustains the arc</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#11045;</div>
+          <div class="part-name">Nozzle</div>
+          <div class="part-num">220819</div>
+          <div class="part-detail">Focuses &amp; constricts the plasma jet</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9678;</div>
+          <div class="part-name">Swirl Ring</div>
+          <div class="part-num">220857</div>
+          <div class="part-detail">Spins gas into stable vortex</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9633;</div>
+          <div class="part-name">Retaining Cap</div>
+          <div class="part-num">220854</div>
+          <div class="part-detail">Holds stack in alignment</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9711;</div>
+          <div class="part-name">Shield</div>
+          <div class="part-num">220818</div>
+          <div class="part-detail">Protects from pierce spatter</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:0.75rem 0 0.5rem;">45A FineCut Set (Thin Gauge)</h4>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="part-icon">&#11042;</div>
+          <div class="part-name">Electrode</div>
+          <div class="part-num">220971</div>
+          <div class="part-detail">FineCut electrode</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#11045;</div>
+          <div class="part-name">Nozzle</div>
+          <div class="part-num">220930</div>
+          <div class="part-detail">Smaller orifice, tighter arc</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9678;</div>
+          <div class="part-name">Swirl Ring</div>
+          <div class="part-num">220857</div>
+          <div class="part-detail">Same as 65A set</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9633;</div>
+          <div class="part-name">Retaining Cap</div>
+          <div class="part-num">220854</div>
+          <div class="part-detail">Same as 65A set</div>
+        </div>
+        <div class="stack-card">
+          <div class="part-icon">&#9711;</div>
+          <div class="part-name">Shield</div>
+          <div class="part-num">220953</div>
+          <div class="part-detail">FineCut shield</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHEN TO REPLACE -->
+    <div class="card card-accent">
+      <h3>When to Replace &mdash; Visual Inspection Guide</h3>
+      <table>
+        <thead><tr><th>Component</th><th>Replace When</th><th>What Happens If You Don't</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Electrode</strong></td>
+            <td>Hafnium pit depth exceeds <code>1/32"</code> (~0.8mm). If copper around the pit changes color (straw, blue, black) &mdash; low air pressure is the cause.</td>
+            <td>Hafnium erodes to copper &rarr; <strong>catastrophic failure</strong>. Damages nozzle, ruins the cut.</td>
+          </tr>
+          <tr>
+            <td><strong>Nozzle</strong></td>
+            <td>Orifice is no longer perfectly round, or edges are rounded/eroded. <strong>Most common wear part.</strong></td>
+            <td>Wider, wandering arc. Increased kerf, poor edge quality, excessive dross.</td>
+          </tr>
+          <tr>
+            <td><strong>Shield</strong></td>
+            <td>Main orifice damaged or vent holes permanently blocked with spatter.</td>
+            <td>Arc instability, poor gas flow, accelerated nozzle wear.</td>
+          </tr>
+          <tr>
+            <td><strong>Swirl Ring</strong></td>
+            <td>Cracked, deformed, or holes are clogged. Outlasts ~15 electrode/nozzle changes.</td>
+            <td>Gas doesn't spin properly &rarr; unstable arc, wider kerf.</td>
+          </tr>
+          <tr>
+            <td><strong>Retaining Cap</strong></td>
+            <td>Threads are stripped or cap is cracked.</td>
+            <td>Consumable stack misalignment &rarr; uneven wear on all parts.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-green">
+        <span class="callout-icon">&#9989;</span>
+        <div><strong>Always replace the electrode and nozzle together</strong> as a matched pair. They wear at similar rates, and a new nozzle with a worn electrode (or vice versa) produces worse results than a matched worn set. Finger-tight only on the retaining cap &mdash; <em>never</em> overtighten.</div>
+      </div>
+      <div class="callout callout-fire">
+        <span class="callout-icon">&#128167;</span>
+        <div><strong>The #1 consumable killer:</strong> Dirty, wet, or oily air. A proper air dryer and oil separator upstream of the plasma unit extends consumable life dramatically. Check your air quality regularly &mdash; water in the line destroys consumables faster than anything else.</div>
+      </div>
+    </div>
+
+    <!-- ── MATERIAL PREPARATION ── -->
+    <div class="card">
+      <h3>Material Preparation &mdash; Hot Rolled Mild Steel</h3>
+      <p>Most of our plate steel (especially 1/4") comes <strong>hot rolled</strong> with a dark, flaky oxide layer called <strong>mill scale</strong>. Understanding how this affects your cut is essential for consistent results.</p>
+
+      <div class="diagnostic-grid">
+        <div class="diagnostic-box" style="background:var(--blue-bg); border:2px solid #B3D4F7;">
+          <h4 style="color:var(--blue);">Hot Rolled (HR)</h4>
+          <ul>
+            <li>Dark mill scale surface</li>
+            <li>Less uniform thickness</li>
+            <li>Cheapest option</li>
+            <li>THC voltage can be erratic</li>
+            <li>More dross adhesion</li>
+          </ul>
+        </div>
+        <div class="diagnostic-box" style="background:var(--green-bg); border:2px solid #A0D8B0;">
+          <h4 style="color:var(--green);">Pickled &amp; Oiled (P&amp;O)</h4>
+          <ul>
+            <li>Mill scale chemically removed</li>
+            <li>Clean, smooth surface</li>
+            <li>Slightly more expensive than HR</li>
+            <li>Dramatically cleaner cuts</li>
+            <li><strong>Best value for plasma</strong></li>
+          </ul>
+        </div>
+        <div class="diagnostic-box" style="background:#F5F0FF; border:2px solid #C8B8E8;">
+          <h4 style="color:#5B21B6;">Cold Rolled (CR)</h4>
+          <ul>
+            <li>Smooth, precise surface</li>
+            <li>Tightest thickness tolerance</li>
+            <li>Most expensive</li>
+            <li>Cleanest plasma cuts</li>
+            <li>Only available thin gauge (&le;12 GA)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="font-family:'Oswald',sans-serif; font-size:0.95rem; text-transform:uppercase; margin:0.75rem 0 0.5rem;">Cutting Tips for 1/4" Hot Rolled Plate</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Orient the cleaner side face-up.</strong> If one side has been shot-blasted or is smoother, put it on top for better surface quality on the visible face.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Use the water table.</strong> Keep water within 1/2" of the bottom of the plate. This cools the material, reduces distortion, and allows faster handling of cut parts.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Run 65A Shielded consumables at 65A.</strong> Full power is required for reliable pierce and clean edges on 1/4" plate. Feed rate: <code>75&ndash;120 IPM</code>. Start at <code>95 IPM</code> and adjust from there.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Increase pierce delay to 0.7&ndash;1.0 sec.</strong> Quarter-inch plate takes significantly longer to pierce than sheet gauge. A short delay means incomplete penetration on the first move.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Post-cut cleanup:</strong> Use a 4" angle grinder with a flap disc (40 or 60 grit) to remove dross and any remaining mill scale from cut edges. For paint or powder coat prep, remove all mill scale from the part surface.</div></div>
+      </div>
+
+      <div class="callout callout-yellow">
+        <span class="callout-icon">&#9888;</span>
+        <div><strong>Air plasma + mild steel = case hardening.</strong> Cutting with air (~80% nitrogen) creates a thin nitride-hardened layer (~0.005") on the cut face. This can dull drill bits and affect weldability. A quick pass with a flap disc removes it. If you need to drill near a plasma-cut edge, grind the surface first.</div>
+      </div>
+    </div>
+
+    <!-- ── OPTIMIZATION PROCESS ── -->
+    <div class="card card-green" style="border-left-color:var(--green);">
+      <h3 style="color:var(--green);">The Optimization Process &mdash; How to Dial In Your Cut</h3>
+      <p style="margin-bottom:0.75rem;">When cut quality isn't where you want it, follow this systematic method. Change <strong>one variable at a time</strong> &mdash; otherwise you can't tell what fixed it.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Start with the cut chart.</strong> Set feed rate, amperage, arc voltage, pierce delay, and heights to the values in the Master Cut Chart above. These are your baseline.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Make test cuts.</strong> Cut 3&ndash;4 straight lines at different speeds bracketing the chart value. Example for 14 GA: try <code>140</code>, <code>170</code>, <code>200</code>, and <code>230 IPM</code>. Label each cut with a marker.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Read the cut edges.</strong> Compare bottom dross, bevel angle, and drag line direction. Pick the cleanest sample. That's your optimal feed rate for this material and consumable condition.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Dial THC voltage.</strong> If edges show uneven bevel, adjust arc voltage &plusmn;2V at a time. Higher voltage = torch rides higher (less bottom dross, more top bevel). Lower voltage = opposite.</div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body"><strong>Re-test after consumable changes.</strong> New consumables cut differently than worn ones. When you install a fresh electrode and nozzle, run a quick test strip to recalibrate your feed rate. Kerf width also changes with wear.</div></div>
+      </div>
+      <div class="callout callout-blue">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>The three main variables:</strong> <strong>1)</strong> Torch height (THC voltage) &middot; <strong>2)</strong> Feed rate (IPM) &middot; <strong>3)</strong> Amperage. Of these, feed rate is the one you'll adjust most often. Torch height and amperage are usually set once per material/consumable combination and left alone.</div>
+      </div>
+    </div>
+
+  </div><!-- end #optimize -->
+
+  <!-- ════════════════════════════════════════════ -->
   <!-- TROUBLESHOOTING                             -->
   <!-- ════════════════════════════════════════════ -->
   <div id="troubleshoot">
@@ -995,7 +1710,7 @@
 
 <footer class="site-footer">
   <p><strong>Mr. McAteer</strong> &middot; CTE Metals &amp; Fabrication &middot; Crescent Valley High School &middot; Corvallis, OR</p>
-  <p style="margin-top:0.5rem;">Arclight Arc Pro &middot; Hypertherm Powermax 45 &middot; SheetCam 6.1.38 &middot; CommandCNC 2.7.8</p>
+  <p style="margin-top:0.5rem;">Arclight Arc Pro &middot; Hypertherm Powermax 65 &middot; SheetCam 6.1.38 &middot; CommandCNC 2.7.8</p>
   <p style="margin-top:1rem; font-size:0.75rem; opacity:0.6;">Rev. February 2026</p>
 </footer>
 
